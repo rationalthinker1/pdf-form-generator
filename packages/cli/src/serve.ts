@@ -21,7 +21,8 @@ export interface ServeResult {
 
 export async function serveForm(
   formFilePath: string,
-  data: Record<string, string> = {}
+  data: Record<string, string> = {},
+  logLevel: 'silent' | 'info' | 'warn' | 'error' = 'silent'
 ): Promise<ServeResult> {
   const formAbsPath = resolve(process.cwd(), formFilePath)
   const tmpDir = resolve(tmpdir(), `pdf-form-${randomBytes(4).toString('hex')}`)
@@ -45,10 +46,10 @@ export async function serveForm(
   // in development, which would cause duplicate field/page registrations in the registry.
   writeFileSync(
     resolve(tmpDir, 'entry.tsx'),
-    `window.__formData = ${JSON.stringify(data)}
-import { createRoot } from 'react-dom/client'
+    `import { createRoot } from 'react-dom/client'
 import FormComponent from '${formAbsPath}'
 
+window.__formData = ${JSON.stringify(data)}
 createRoot(document.getElementById('root')!).render(<FormComponent />)
 `
   )
@@ -84,7 +85,7 @@ createRoot(document.getElementById('root')!).render(<FormComponent />)
         strict: false,
       },
     },
-    logLevel: 'silent',
+    logLevel,
     resolve: {
       // Explicit aliases so Vite can find all required packages from temp dir
       alias: [

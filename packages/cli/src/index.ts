@@ -51,7 +51,12 @@ async function main() {
       process.exit(1)
     }
     const devData = parseData(devDataArg)
-    await runDev(devFormFile, devData)
+    try {
+      await runDev(devFormFile, devData)
+    } catch (err) {
+      if ((err as Error).message === 'Interrupted') process.exit(0)
+      throw err
+    }
     return
   }
 

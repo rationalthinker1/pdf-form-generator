@@ -5,7 +5,7 @@ export async function runDev(formFilePath: string, data: Record<string, string>)
   const absPath = resolve(process.cwd(), formFilePath)
   console.log(`  Dev server starting...`)
 
-  const { url, cleanup } = await serveForm(formFilePath, data)
+  const { url, cleanup } = await serveForm(formFilePath, data, 'info')
 
   console.log(`\n  Dev server: ${url}`)
   console.log(`  Watching:   ${absPath}\n`)
@@ -25,7 +25,7 @@ export async function runDev(formFilePath: string, data: Record<string, string>)
 
   // Block until Ctrl+C
   await new Promise<void>((_resolve, reject) => {
-    process.on('SIGINT', async () => {
+    process.once('SIGINT', async () => {
       await cleanup()
       reject(new Error('Interrupted'))
     })
