@@ -6,7 +6,7 @@
     "generate-pdf": "./dist/index.js"
   },
   "scripts": {
-    "build": "bun build ./src/index.ts --outdir ./dist --target node",
+    "build": "bun build ./src/index.ts --outdir ./dist --target node --external electron --external chromium-bidi --external lightningcss --external @babel/preset-typescript",
     "test": "bun test"
   },
   "dependencies": {
