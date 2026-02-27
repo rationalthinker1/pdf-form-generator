@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, type ReactNode } from 'react'
 import { DocumentContext, createFieldRegistry } from '../context/DocumentContext'
 import type { ExtractedData } from '../types'
 import { PAGE_SIZES } from '../types'
@@ -12,7 +12,7 @@ declare global {
 }
 
 interface DocumentProps {
-  children?: React.ReactNode
+  children?: ReactNode
 }
 
 export function Document({ children }: DocumentProps) {
