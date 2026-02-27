@@ -7,7 +7,7 @@
     "test": "bun test",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "dev": "generate-pdf dev"
+    "dev": "bun packages/cli/src/index.ts dev"
   },
   "devDependencies": {
     "@types/react": "^18.3.0",
