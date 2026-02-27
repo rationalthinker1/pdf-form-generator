@@ -6,7 +6,8 @@
     "build": "bun run --filter '*' build",
     "test": "bun test",
     "lint": "eslint .",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "dev": "generate-pdf dev"
   },
   "devDependencies": {
     "@types/react": "^18.3.0",
