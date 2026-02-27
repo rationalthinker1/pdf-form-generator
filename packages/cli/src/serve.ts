@@ -1,7 +1,7 @@
 import { createServer, type ViteDevServer } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
-import { writeFileSync, mkdirSync } from 'fs'
+import { writeFileSync, mkdirSync, rmSync } from 'fs'
 import { tmpdir } from 'os'
 import { randomBytes } from 'crypto'
 
@@ -58,7 +58,10 @@ createRoot(document.getElementById('root')!).render(
   }
 
   const url = `http://localhost:${addressInfo.port}`
-  const cleanup = async () => { await server.close() }
+  const cleanup = async () => {
+    await server.close()
+    rmSync(tmpDir, { recursive: true, force: true })
+  }
 
   return { url, server, cleanup }
 }
