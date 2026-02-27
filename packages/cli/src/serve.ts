@@ -19,7 +19,10 @@ export interface ServeResult {
   cleanup: () => Promise<void>
 }
 
-export async function serveForm(formFilePath: string): Promise<ServeResult> {
+export async function serveForm(
+  formFilePath: string,
+  data: Record<string, string> = {}
+): Promise<ServeResult> {
   const formAbsPath = resolve(process.cwd(), formFilePath)
   const tmpDir = resolve(tmpdir(), `pdf-form-${randomBytes(4).toString('hex')}`)
   mkdirSync(tmpDir, { recursive: true })
@@ -42,7 +45,8 @@ export async function serveForm(formFilePath: string): Promise<ServeResult> {
   // in development, which would cause duplicate field/page registrations in the registry.
   writeFileSync(
     resolve(tmpDir, 'entry.tsx'),
-    `import { createRoot } from 'react-dom/client'
+    `window.__formData = ${JSON.stringify(data)}
+import { createRoot } from 'react-dom/client'
 import FormComponent from '${formAbsPath}'
 
 createRoot(document.getElementById('root')!).render(<FormComponent />)
