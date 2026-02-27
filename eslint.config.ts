@@ -15,6 +15,9 @@ export default [
       parser: tsparser,
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+    settings: {
+      react: { version: '18' },
+    },
     rules: {
       ...tseslint.configs.recommended.rules,
       'react-hooks/rules-of-hooks': 'error',
