@@ -19,7 +19,7 @@ export const PAGE_SIZES: Record<PageSize, PageDimensions> = {
 export interface FieldRegistration {
   name: string
   type: FieldType
-  ref: React.RefObject<HTMLDivElement>
+  ref: React.RefObject<HTMLElement>
   defaultValue?: string
 }
 
@@ -29,6 +29,7 @@ export interface PageRegistration {
   ref: React.RefObject<HTMLDivElement>
 }
 
+/** All coordinates are in pixels, relative to the Page container's top-left corner. */
 export interface ExtractedField {
   name: string
   type: FieldType
