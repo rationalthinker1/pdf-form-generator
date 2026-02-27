@@ -56,6 +56,31 @@ export function Document({ children }: DocumentProps) {
                   defaultValue: f.defaultValue ?? window.__formData?.[f.name],
                 }
               }),
+            texts: registry.getTexts()
+              .filter(t => {
+                const el = t.ref.current
+                if (!el) return false
+                const rect = el.getBoundingClientRect()
+                return (
+                  rect.top >= pageRect.top - 1 &&
+                  rect.bottom <= pageRect.bottom + 1
+                )
+              })
+              .map(t => {
+                const el = t.ref.current!
+                const rect = el.getBoundingClientRect()
+                return {
+                  text: t.text,
+                  pageIndex,
+                  x: rect.left - pageRect.left,
+                  y: rect.top - pageRect.top,
+                  width: rect.width,
+                  height: rect.height,
+                  fontSize: t.fontSize,
+                  bold: t.bold,
+                  color: t.color,
+                }
+              }),
           }
         }),
       }
