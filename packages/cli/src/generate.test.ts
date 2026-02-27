@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'bun:test'
 import { generatePdf } from './generate'
 import { PDFDocument } from 'pdf-lib'
+import type { ExtractedPage } from '@pdf-form/core'
+import { inflateSync } from 'node:zlib'
 
 describe('generatePdf', () => {
   it('produces a valid PDF binary', async () => {
@@ -56,15 +58,58 @@ describe('generatePdf', () => {
       {
         widthPx: 816, heightPx: 1056, widthPt: 612, heightPt: 792,
         fields: [],
+        texts: [],
       },
       {
         widthPx: 816, heightPx: 1056, widthPt: 612, heightPt: 792,
         fields: [],
+        texts: [],
       },
     ]
 
     const result = await generatePdf(pages, {})
     const doc = await PDFDocument.load(result)
     expect(doc.getPageCount()).toBe(2)
+  })
+})
+
+describe('generatePdf - text', () => {
+  it('draws static text onto the page', async () => {
+    const page: ExtractedPage = {
+      widthPx: 816, heightPx: 1056, widthPt: 612, heightPt: 792,
+      fields: [],
+      texts: [
+        { text: 'Hello World', pageIndex: 0, x: 10, y: 10, width: 200, height: 20, fontSize: 12, bold: false, color: '#000000' }
+      ],
+    }
+    const result = await generatePdf([page], {})
+    // pdf-lib compresses content streams with FlateDecode and encodes text as
+    // hex (e.g. <48656C6C6F20576F726C64> for "Hello World"). Decompress each
+    // stream and verify the hex-encoded text is present.
+    const buf = Buffer.from(result)
+    const streamMarker = Buffer.from('stream\n')
+    const endStreamMarker = Buffer.from('\nendstream')
+    let found = false
+    let offset = 0
+    const helloWorldHex = Buffer.from('Hello World').toString('hex').toUpperCase()
+    while (offset < buf.length) {
+      const streamStart = buf.indexOf(streamMarker, offset)
+      if (streamStart === -1) break
+      const contentStart = streamStart + streamMarker.length
+      const streamEnd = buf.indexOf(endStreamMarker, contentStart)
+      if (streamEnd === -1) break
+      const streamBytes = buf.slice(contentStart, streamEnd)
+      try {
+        const decompressed = inflateSync(streamBytes).toString('ascii')
+        if (decompressed.toUpperCase().includes(helloWorldHex)) {
+          found = true
+          break
+        }
+      } catch {
+        // not a deflate stream, skip
+      }
+      offset = contentStart
+    }
+    expect(found).toBe(true)
   })
 })
