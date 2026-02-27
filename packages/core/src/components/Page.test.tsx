@@ -4,7 +4,6 @@ import { createElement } from 'react'
 import { Page } from './Page'
 import { DocumentContext } from '../context/DocumentContext'
 import type { FieldRegistry } from '../context/DocumentContext'
-import { createRef } from 'react'
 
 // Minimal mock registry that satisfies the FieldRegistry interface
 function createMockRegistry(): FieldRegistry {
