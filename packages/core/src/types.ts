@@ -4,6 +4,26 @@ export type PageSize = 'letter' | 'a4'
 
 export type FieldType = 'text' | 'textarea' | 'checkbox' | 'dropdown'
 
+export interface TextRegistration {
+  ref: React.RefObject<HTMLElement>
+  text: string
+  fontSize: number
+  bold: boolean
+  color: string
+}
+
+export interface ExtractedText {
+  text: string
+  pageIndex: number
+  x: number
+  y: number
+  width: number
+  height: number
+  fontSize: number
+  bold: boolean
+  color: string
+}
+
 export interface PageDimensions {
   widthPx: number
   heightPx: number
@@ -46,6 +66,7 @@ export interface ExtractedPage {
   widthPt: number
   heightPt: number
   fields: ExtractedField[]
+  texts: ExtractedText[]
 }
 
 export interface ExtractedData {

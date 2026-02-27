@@ -28,3 +28,21 @@ describe('createFieldRegistry', () => {
     expect(registry.getFields()).toHaveLength(0)
   })
 })
+
+describe('createFieldRegistry - text registry', () => {
+  it('registers a text', () => {
+    const registry = createFieldRegistry()
+    const ref = createRef<HTMLDivElement>()
+    registry.registerText({ ref, text: 'Hello', fontSize: 12, bold: false, color: '#000000' })
+    expect(registry.getTexts()).toHaveLength(1)
+    expect(registry.getTexts()[0].text).toBe('Hello')
+  })
+
+  it('unregisters a text by ref', () => {
+    const registry = createFieldRegistry()
+    const ref = createRef<HTMLDivElement>()
+    registry.registerText({ ref, text: 'Hello', fontSize: 12, bold: false, color: '#000000' })
+    registry.unregisterText(ref)
+    expect(registry.getTexts()).toHaveLength(0)
+  })
+})

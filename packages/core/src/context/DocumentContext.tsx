@@ -1,5 +1,6 @@
 import { createContext, useContext } from 'react'
-import type { FieldRegistration, PageRegistration } from '../types'
+import type React from 'react'
+import type { FieldRegistration, PageRegistration, TextRegistration } from '../types'
 
 // --- Registry factory (pure, testable) ---
 
@@ -9,11 +10,15 @@ export interface FieldRegistry {
   getFields: () => FieldRegistration[]
   registerPage: (page: PageRegistration) => void
   getPages: () => PageRegistration[]
+  registerText: (text: TextRegistration) => void
+  unregisterText: (ref: React.RefObject<HTMLElement>) => void
+  getTexts: () => TextRegistration[]
 }
 
 export function createFieldRegistry(): FieldRegistry {
   const fields: FieldRegistration[] = []
   const pages: PageRegistration[] = []
+  const texts: TextRegistration[] = []
 
   return {
     registerField(field) {
@@ -28,6 +33,12 @@ export function createFieldRegistry(): FieldRegistry {
     getFields: () => fields,
     registerPage: (page) => pages.push(page),
     getPages: () => pages,
+    registerText: (text) => texts.push(text),
+    unregisterText: (ref) => {
+      const idx = texts.findIndex(t => t.ref === ref)
+      if (idx !== -1) texts.splice(idx, 1)
+    },
+    getTexts: () => texts,
   }
 }
 

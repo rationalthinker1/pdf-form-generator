@@ -5,6 +5,8 @@ export type {
   ExtractedField,
   ExtractedPage,
   ExtractedData,
+  TextRegistration,
+  ExtractedText,
 } from './types'
 
 export { PAGE_SIZES } from './types'
