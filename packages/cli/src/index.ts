@@ -4,6 +4,7 @@ import { writeFileSync, readFileSync } from 'fs'
 import { serveForm } from './serve'
 import { measureForm } from './measure'
 import { generatePdf } from './generate'
+import { runDev } from './dev'
 
 function parseArgs(argv: string[]) {
   const args = argv.slice(2)
@@ -39,6 +40,20 @@ function parseData(dataArg?: string): Record<string, string> {
 
 async function main() {
   const { formFile, dataArg, output, open } = parseArgs(process.argv)
+
+  // Dev subcommand: generate-pdf dev <form.tsx> [data]
+  if (formFile === 'dev') {
+    const args = process.argv.slice(3) // everything after "dev"
+    const devFormFile = args.find(a => !a.startsWith('{') && !a.startsWith('@') && !a.startsWith('-'))
+    const devDataArg = args.find(a => a.startsWith('{') || a.startsWith('@'))
+    if (!devFormFile) {
+      console.error('Usage: generate-pdf dev <form.tsx> [data]')
+      process.exit(1)
+    }
+    const devData = parseData(devDataArg)
+    await runDev(devFormFile, devData)
+    return
+  }
 
   if (!formFile) {
     console.error('Usage: generate-pdf <form.tsx> [data] [-o output.pdf] [--open]')
