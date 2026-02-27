@@ -10,12 +10,11 @@ interface PageProps {
 
 export function Page({ size = 'letter', children }: PageProps) {
   const ref = useRef<HTMLDivElement>(null)
-  const { registerPage, getPages } = useDocumentContext()
+  const { registerPage } = useDocumentContext()
   const dims = PAGE_SIZES[size]
 
   useEffect(() => {
-    const pageIndex = getPages().length
-    registerPage({ pageIndex, size, ref })
+    registerPage({ size, ref })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (

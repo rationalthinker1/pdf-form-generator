@@ -24,7 +24,6 @@ export interface FieldRegistration {
 }
 
 export interface PageRegistration {
-  pageIndex: number
   size: PageSize
   ref: React.RefObject<HTMLDivElement>
 }
