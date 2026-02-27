@@ -15,9 +15,11 @@ export { useDocumentContext } from './context/DocumentContext'
 import { Document } from './components/Document'
 import { Page } from './components/Page'
 import { TextField } from './components/TextField'
+import { Text } from './components/Text'
 
 export const Pdf = {
   Document,
   Page,
   TextField,
+  Text,
 } as const
