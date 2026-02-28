@@ -46,10 +46,10 @@ export default function MyForm() {
 
 ```bash
 # Generate fillable PDF
-generate-pdf form.tsx '{"firstName":"Bob"}' -o output.pdf
+bun src/cli/index.ts src/examples/chp-contract/form.tsx '{}' -o output.pdf
 
-# Live dev preview (opens browser, hot-reloads)
-generate-pdf dev form.tsx
+# Live dev preview
+bun dev
 ```
 
 ## Dev Command

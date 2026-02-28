@@ -35,12 +35,13 @@ function waitForPort(port: number, timeoutMs = 20000): Promise<void> {
 
 export async function runDev(formFilePath: string): Promise<void> {
   const formAbsPath = resolve(process.cwd(), formFilePath)
+  const formVitePath = '/' + formAbsPath.replace(repoRoot + '/', '')
   const entryFile = resolve(repoRoot, '__dev_entry__.tsx')
 
   writeFileSync(
     entryFile,
     `import { createRoot } from 'react-dom/client'
-import FormComponent from '${formAbsPath}'
+import FormComponent from '${formVitePath}'
 createRoot(document.getElementById('root')!).render(<FormComponent />)
 `
   )

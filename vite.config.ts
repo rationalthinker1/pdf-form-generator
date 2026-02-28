@@ -9,6 +9,9 @@ process.env.VITE_ENTRY = entry
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  optimizeDeps: {
+    include: ['react-hook-form'],
+  },
   build: {
     rollupOptions: {
       input: entry,

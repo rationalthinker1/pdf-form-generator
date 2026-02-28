@@ -14,7 +14,7 @@ const viteBin = resolve(repoRoot, 'node_modules', '.bin', 'vite')
 function getFreePort(): Promise<number> {
   return new Promise((res, rej) => {
     const srv = createServer()
-    srv.listen(0, '127.0.0.1', () => {
+    srv.listen(0, 'localhost', () => {
       const port = (srv.address() as { port: number }).port
       srv.close(() => res(port))
     })
@@ -22,11 +22,12 @@ function getFreePort(): Promise<number> {
   })
 }
 
+
 function waitForPort(port: number, timeoutMs = 20000): Promise<void> {
   return new Promise((resolve, reject) => {
     const deadline = Date.now() + timeoutMs
     const attempt = () => {
-      const sock = createConnection({ port, host: '127.0.0.1' })
+      const sock = createConnection({ port, host: 'localhost' })
       sock.on('connect', () => { sock.destroy(); resolve() })
       sock.on('error', () => {
         if (Date.now() > deadline) reject(new Error(`Timeout waiting for port ${port}`))
@@ -38,13 +39,16 @@ function waitForPort(port: number, timeoutMs = 20000): Promise<void> {
 }
 
 async function spawnVite(formFilePath: string): Promise<{ url: string; cleanup: () => void }> {
+  // Resolve to an absolute path, then make it root-relative for Vite
   const formAbsPath = resolve(process.cwd(), formFilePath)
+  const formVitePath = '/' + formAbsPath.replace(repoRoot + '/', '')
   const entryFile = resolve(repoRoot, '__dev_entry__.tsx')
 
   writeFileSync(
     entryFile,
-    `import { createRoot } from 'react-dom/client'
-import FormComponent from '${formAbsPath}'
+    `import '/src/main.css'
+import { createRoot } from 'react-dom/client'
+import FormComponent from '${formVitePath}'
 createRoot(document.getElementById('root')!).render(<FormComponent />)
 `
   )
