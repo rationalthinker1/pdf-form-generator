@@ -81,12 +81,14 @@ export function Document({ children }: DocumentProps) {
         const boxes = Array.from(pageEl.querySelectorAll<HTMLElement>('[data-pdf-box]'))
           .map(el => {
             const rect = el.getBoundingClientRect();
+            const bw = el.dataset.pdfBoxBorder;
             return {
               pageIndex,
               x: rect.left - pageRect.left,
               y: rect.top - pageRect.top,
               width: rect.width,
               height: rect.height,
+              borderWidth: bw !== undefined ? Number(bw) : undefined,
             };
           });
 

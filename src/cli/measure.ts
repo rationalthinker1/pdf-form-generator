@@ -52,7 +52,6 @@ export async function measureForm(
 
     const totalFields = data.pages.reduce((n: number, p: { fields: unknown[] }) => n + p.fields.length, 0)
     console.log(`  Extracted ${totalFields} field(s) across ${data.pages.length} page(s)`)
-    data.pages[0]?.fields.slice(0, 3).forEach((f: any) => console.log(`  field: ${f.name} = ${JSON.stringify(f.defaultValue)}`))
 
     return data;
   } finally {

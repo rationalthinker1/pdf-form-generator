@@ -57,13 +57,14 @@ export async function generatePdf(
 
         const tf = form.createTextField(field.name);
         if (field.type === 'textarea') tf.enableMultiline();
-        // No background — widget is transparent so page text shows through
+        // Transparent background, with border drawn by the widget itself
+        // (widget annotations render on top of page content, so border must be on the widget)
         tf.addToPage(page, {
           ...coords,
           font: helvetica,
           backgroundColor: undefined,
-          borderColor: undefined,
-          borderWidth: 0,
+          borderColor: rgb(0, 0, 0),
+          borderWidth: 0.75,
         });
         tf.setFontSize(FONT_SIZE);
       }
@@ -77,7 +78,7 @@ export async function generatePdf(
         width: coords.width,
         height: coords.height,
         borderColor: rgb(0, 0, 0),
-        borderWidth: 1.5,
+        borderWidth: box.borderWidth ?? 1.5,
       });
     }
   }

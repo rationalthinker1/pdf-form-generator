@@ -55,6 +55,7 @@ export interface ExtractedBox {
   y: number
   width: number
   height: number
+  borderWidth?: number
 }
 
 export interface ExtractedData {
