@@ -144,13 +144,13 @@ async function main() {
 
   try {
     console.log('Measuring fields via Playwright...')
-    const extracted = await measureForm(url, data)
+    const { data: extracted, pdfBytes: playwrightPdf } = await measureForm(url, data)
 
     const totalFields = extracted.pages.reduce((n, p) => n + p.fields.length, 0)
     console.log(`Found ${totalFields} field(s) across ${extracted.pages.length} page(s)`)
 
     console.log('Generating AcroForm PDF...')
-    const pdfBytes = await generatePdf(extracted.pages)
+    const pdfBytes = await generatePdf(playwrightPdf, extracted.pages)
 
     const outputPath = resolve(process.cwd(), output)
     writeFileSync(outputPath, pdfBytes)

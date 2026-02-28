@@ -4,15 +4,12 @@ import type { ExtractedData } from '../index';
 export async function measureForm(
   url: string,
   formData: Record<string, string> = {}
-): Promise<ExtractedData> {
+): Promise<{ data: ExtractedData; pdfBytes: Uint8Array }> {
   console.log(`  Launching Chromium → ${url}`)
   const browser = await chromium.launch({
     args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-setuid-sandbox'],
   });
   const page = await browser.newPage();
-  // Emulate print media so Tailwind's print: variants apply during measurement.
-  // Form authors can use print:hidden, print:bg-white, etc. to control PDF output.
-  await page.emulateMedia({ media: 'print' });
 
   page.on('console', msg => {
     if (msg.type() === 'error') console.log(`  [browser] ${msg.text()}`)
@@ -29,13 +26,9 @@ export async function measureForm(
     }, formData);
 
     console.log('  Navigating...')
-    // Use 'commit' — don't wait for networkidle here.
-    // Vite may trigger a dep-optimization reload after first load;
-    // waitForFunction below handles readiness across any reloads.
     await page.goto(url, { waitUntil: 'commit' });
     console.log('  Waiting for React mount...')
 
-    // Wait up to 60s — covers initial load + any Vite dep-optimization reload
     await page.waitForFunction(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       () => (window as any).__ready === true,
@@ -53,7 +46,43 @@ export async function measureForm(
     const totalFields = data.pages.reduce((n: number, p: { fields: unknown[] }) => n + p.fields.length, 0)
     console.log(`  Extracted ${totalFields} field(s) across ${data.pages.length} page(s)`)
 
-    return data;
+    // Generate PDF via Playwright — captures all CSS, Tailwind, fonts exactly as rendered
+    console.log('  Printing to PDF...')
+    const pdfBytes = await page.pdf({ printBackground: true })
+    console.log('  PDF printed')
+
+    // Re-extract field positions relative to each Page element's top-left corner,
+    // converted to PDF points. Playwright prints each [data-pdf-page] as a separate page.
+    const SCALE = 72 / 96;
+    const fields = await page.evaluate((scale) => {
+      return Array.from(document.querySelectorAll<HTMLElement>('[data-field-name]')).map(el => {
+        const fieldRect = el.getBoundingClientRect();
+        // Find the containing page element
+        const pageEl = el.closest<HTMLElement>('[data-pdf-page]');
+        const pageRect = pageEl ? pageEl.getBoundingClientRect() : { left: 0, top: 0 };
+        const scrollY = window.scrollY;
+        return {
+          name: el.dataset.fieldName!,
+          xPt: (fieldRect.left - pageRect.left) * scale,
+          yTopPt: (fieldRect.top - pageRect.top + scrollY) * scale,
+          widthPt: fieldRect.width * scale,
+          heightPt: fieldRect.height * scale,
+        };
+      });
+    }, SCALE);
+
+    // Attach PDF-space coords to each field in extracted data
+    const fieldMap = new Map(fields.map(f => [f.name, f]));
+    for (const p of data.pages) {
+      for (const field of p.fields) {
+        const f = fieldMap.get(field.name);
+        if (f) {
+          Object.assign(field, { xPt: f.xPt, yTopPt: f.yTopPt, widthPt: f.widthPt, heightPt: f.heightPt });
+        }
+      }
+    }
+
+    return { data, pdfBytes };
   } finally {
     await browser.close();
   }

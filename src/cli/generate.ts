@@ -1,97 +1,59 @@
-import { PDFDocument, PDFName, StandardFonts, rgb } from 'pdf-lib';
-import { convertToPdfCoords } from './convert';
+import { PDFDocument, PDFName, StandardFonts } from 'pdf-lib';
 import type { ExtractedPage } from '../index';
 
-function hexToRgb(hex: string) {
-  const r = parseInt(hex.slice(1, 3), 16) / 255;
-  const g = parseInt(hex.slice(3, 5), 16) / 255;
-  const b = parseInt(hex.slice(5, 7), 16) / 255;
-  return rgb(r, g, b);
-}
-
 export async function generatePdf(
+  playwrightPdf: Uint8Array,
   pages: ExtractedPage[],
 ): Promise<Uint8Array> {
-  const pdfDoc = await PDFDocument.create();
+  const pdfDoc = await PDFDocument.load(playwrightPdf, { ignoreEncryption: true });
   const form = pdfDoc.getForm();
-
   const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
-  const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-
   const FONT_SIZE = 10;
 
+  const pdfPages = pdfDoc.getPages();
+
   for (const pageData of pages) {
-    const page = pdfDoc.addPage([pageData.widthPt, pageData.heightPt]);
-
-    // Draw static texts (labels, headings) BEFORE AcroForm annotations
-    for (const text of pageData.texts ?? []) {
-      const coords = convertToPdfCoords(text, pageData);
-      const font = text.bold ? helveticaBold : helvetica;
-      const size = text.fontSize * (72 / 96);
-      page.drawText(text.text, {
-        x: coords.x,
-        y: coords.y + 2,
-        size,
-        font,
-        color: hexToRgb(text.color),
-      });
-    }
-
     for (const field of pageData.fields) {
-      const coords = convertToPdfCoords(field, pageData);
+      if (field.xPt === undefined || field.yTopPt === undefined || field.widthPt === undefined || field.heightPt === undefined) continue;
+
+      // Playwright PDF Y-axis: origin is top-left of the whole document.
+      // pdf-lib Y-axis: origin is bottom-left of each page.
+      // Each PDF page is 792pt tall (letter). Find which page this field lands on.
+      const page = pdfPages[field.pageIndex];
+      if (!page) continue;
+      const { height: pageHeightPt } = page.getSize();
+
+      // yTopPt is distance from document top; convert to pdf-lib bottom-origin within the page
+      // For single-page: pdfY = pageHeight - yTopPt - heightPt
+      // For multi-page: need page offset. Playwright stacks pages vertically in the PDF.
+      // Page N starts at N * pageHeightPt from document top.
+      const pageTopPt = field.pageIndex * pageHeightPt;
+      const yPt = pageHeightPt - (field.yTopPt - pageTopPt) - field.heightPt;
 
       if (field.type === 'text' || field.type === 'textarea') {
-        // Draw pre-filled value as page text so it renders at the correct size
-        const value = field.defaultValue ?? '';
-        if (value) {
-          const size = FONT_SIZE;
-          const y = coords.y + (coords.height - size) / 2;
-          page.drawText(value, {
-            x: coords.x + 4,
-            y,
-            size,
-            font: helvetica,
-            color: rgb(0.094, 0.094, 0.094), // text-gray-800 ≈ #181818
-          });
-        }
-
         const tf = form.createTextField(field.name);
         if (field.type === 'textarea') tf.enableMultiline();
-        // Transparent background, with border drawn by the widget itself
-        // (widget annotations render on top of page content, so border must be on the widget)
         tf.addToPage(page, {
-          ...coords,
+          x: field.xPt,
+          y: yPt,
+          width: field.widthPt,
+          height: field.heightPt,
           font: helvetica,
           backgroundColor: undefined,
-          borderColor: rgb(0, 0, 0),
-          borderWidth: 0.75,
+          borderColor: undefined,
+          borderWidth: 0,
         });
         tf.setFontSize(FONT_SIZE);
       }
     }
-
-    for (const box of pageData.boxes ?? []) {
-      const coords = convertToPdfCoords(box, pageData);
-      page.drawRectangle({
-        x: coords.x,
-        y: coords.y,
-        width: coords.width,
-        height: coords.height,
-        borderColor: rgb(0, 0, 0),
-        borderWidth: box.borderWidth ?? 1.5,
-      });
-    }
   }
 
-  // Remove AP streams so PDF viewers use DA (font size) for editing
-  const pdfBytes = await pdfDoc.save({ useObjectStreams: false });
-  const pdfDoc2 = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
-
-  for (const field of pdfDoc2.getForm().getFields()) {
+  // Remove AP streams so viewers use DA font size when field is active
+  for (const field of form.getFields()) {
     for (const widget of field.acroField.getWidgets()) {
       widget.dict.delete(PDFName.of('AP'));
     }
   }
 
-  return pdfDoc2.save({ useObjectStreams: false });
+  return pdfDoc.save({ useObjectStreams: false });
 }

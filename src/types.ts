@@ -37,6 +37,11 @@ export interface ExtractedField {
   width: number
   height: number
   defaultValue?: string
+  // PDF-space coords set by measure.ts after page.pdf()
+  xPt?: number
+  yTopPt?: number  // distance from document top in points
+  widthPt?: number
+  heightPt?: number
 }
 
 export interface ExtractedPage {
