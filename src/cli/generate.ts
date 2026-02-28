@@ -35,9 +35,10 @@ export async function generatePdf(
         // size regardless of how the PDF viewer handles AcroForm appearance streams.
         if (value) {
           const FONT_SIZE = 10;
-          // coords.y is the bottom of the field (PDF bottom-left origin).
-          // Center the text vertically: baseline = bottom + (height - font ascent) / 2
-          const textY = coords.y + (coords.height - FONT_SIZE * 0.75) / 2;
+          // coords.y = bottom of field in PDF pts (origin bottom-left)
+          // drawText y = baseline position; center baseline in the field height
+          const ascent = helvetica.heightAtSize(FONT_SIZE);
+          const textY = coords.y + (coords.height - ascent) / 2;
           page.drawText(value, {
             x: coords.x + 3,
             y: textY,
