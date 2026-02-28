@@ -3,8 +3,8 @@ import type { ExtractedData, ExtractedPage, PageSize } from '../types';
 import { PAGE_SIZES } from '../types';
 
 function rgbToHex(rgb: string): string {
-  const m = rgb.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
-  if (!m) return rgb;
+  const m = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+  if (!m) return '#000000';
   return '#' + [m[1], m[2], m[3]]
     .map(n => parseInt(n).toString(16).padStart(2, '0'))
     .join('');
@@ -58,7 +58,8 @@ export function Document({ children }: DocumentProps) {
           .map(el => {
             const rect = el.getBoundingClientRect();
             const fs = el.dataset.pdfFontSize;
-            const col = el.dataset.pdfColor;
+            // Use getComputedStyle so we always get rgb() regardless of CSS color format
+            const computedColor = getComputedStyle(el).color;
             return {
               text: el.textContent ?? '',
               pageIndex,
@@ -68,7 +69,7 @@ export function Document({ children }: DocumentProps) {
               height: rect.height,
               fontSize: fs !== undefined ? Number(fs) : 12,
               bold: el.dataset.pdfBold === 'true',
-              color: col ? rgbToHex(col) : '#000000',
+              color: rgbToHex(computedColor),
             };
           });
 
