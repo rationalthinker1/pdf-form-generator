@@ -48,7 +48,7 @@ export async function measureForm(
 
     // Generate PDF via Playwright — captures all CSS, Tailwind, fonts exactly as rendered
     console.log('  Printing to PDF...')
-    const pdfBytes = await page.pdf({ printBackground: true })
+    const pdfBytes = await page.pdf({ printBackground: true, margin: { top: 0, right: 0, bottom: 0, left: 0 } })
     console.log('  PDF printed')
 
     // Re-extract field positions relative to each Page element's top-left corner,
@@ -60,11 +60,13 @@ export async function measureForm(
         // Find the containing page element
         const pageEl = el.closest<HTMLElement>('[data-pdf-page]');
         const pageRect = pageEl ? pageEl.getBoundingClientRect() : { left: 0, top: 0 };
-        const scrollY = window.scrollY;
+        // pageEl's offset from document top (accounts for Document wrapper padding/gap)
+        const pageOffsetTop = pageEl ? pageEl.getBoundingClientRect().top + window.scrollY : 0;
         return {
           name: el.dataset.fieldName!,
           xPt: (fieldRect.left - pageRect.left) * scale,
-          yTopPt: (fieldRect.top - pageRect.top + scrollY) * scale,
+          // yTopPt = field's offset from page top + page's offset from document top
+          yTopPt: (fieldRect.top - pageRect.top + pageOffsetTop) * scale,
           widthPt: fieldRect.width * scale,
           heightPt: fieldRect.height * scale,
         };
