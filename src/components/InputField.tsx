@@ -50,8 +50,9 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
         <Pdf.TextField
           name={name}
           label={label}
+          type={type}
           defaultValue={value ?? defaultValue}
-          className={`${textClass} ${textClassName} ${onChange !== undefined || type === 'date' ? 'text-transparent print:text-gray-800' : ''}`}
+          className={`${textClass} ${textClassName} ${onChange !== undefined || type === 'date' ? 'invisible print:visible' : ''}`}
           style={textStyle}
         />
         {onChange !== undefined && (type === 'text' || type === 'textarea') && (

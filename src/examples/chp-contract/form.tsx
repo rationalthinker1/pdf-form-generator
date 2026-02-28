@@ -51,6 +51,10 @@ export default function CHPContractPage2() {
       <Pdf.Document>
         <Pdf.Page size="letter">
 
+          <div className="w-full bg-gray-100 uppercase tracking-normal text-gray-800 font-bold py-1 px-2">
+            Homeowner Information
+          </div>
+
           {/* ── CUSTOMER INFORMATION ─────────────────────────────────────── */}
           <Pdf.Box className={block}>
             <div className={row}>

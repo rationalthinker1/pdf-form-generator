@@ -1,4 +1,4 @@
-import { PDFDocument, PDFName, StandardFonts } from 'pdf-lib';
+import { PDFDocument, PDFName, PDFString, StandardFonts } from 'pdf-lib';
 import type { ExtractedPage } from '../index';
 
 export async function generatePdf(
@@ -30,13 +30,14 @@ export async function generatePdf(
       const pageTopPt = field.pageIndex * pageHeightPt;
       const yPt = pageHeightPt - (field.yTopPt - pageTopPt) - field.heightPt;
 
-      if (field.type === 'text' || field.type === 'textarea') {
+      if (field.type === 'text' || field.type === 'textarea' || field.type === 'date') {
         const tf = form.createTextField(field.name);
         if (field.type === 'textarea') tf.enableMultiline();
+        const PAD_LEFT = 4;
         tf.addToPage(page, {
-          x: field.xPt,
+          x: field.xPt + PAD_LEFT,
           y: yPt,
-          width: field.widthPt,
+          width: field.widthPt - PAD_LEFT,
           height: field.heightPt,
           font: helvetica,
           backgroundColor: undefined,
@@ -44,6 +45,20 @@ export async function generatePdf(
           borderWidth: 0,
         });
         tf.setFontSize(FONT_SIZE);
+
+        if (field.type === 'date') {
+          const aaDict = pdfDoc.context.obj({
+            K: pdfDoc.context.obj({
+              S: PDFName.of('JavaScript'),
+              JS: PDFString.of('AFDate_KeystrokeEx("yyyy-mm-dd")'),
+            }),
+            F: pdfDoc.context.obj({
+              S: PDFName.of('JavaScript'),
+              JS: PDFString.of('AFDate_FormatEx("yyyy-mm-dd")'),
+            }),
+          });
+          tf.acroField.dict.set(PDFName.of('AA'), aaDict);
+        }
       }
     }
   }

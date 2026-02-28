@@ -44,7 +44,7 @@ export function Document({ children }: DocumentProps) {
             const storedDefault = el.dataset.fieldDefaultValue;
             return {
               name,
-              type: (el.dataset.fieldType ?? 'text') as 'text',
+              type: (el.dataset.fieldType ?? 'text') as 'text' | 'date',
               pageIndex,
               x: rect.left - pageRect.left,
               y: rect.top - pageRect.top,

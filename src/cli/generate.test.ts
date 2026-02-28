@@ -1,27 +1,41 @@
-import { describe, it, expect } from 'bun:test';
+import { describe, it, expect, beforeAll } from 'bun:test';
 import { generatePdf } from './generate';
-import { PDFDocument } from 'pdf-lib';
+import { PDFDocument, PDFName } from 'pdf-lib';
 import type { ExtractedPage } from '../../index';
-import { inflateSync } from 'node:zlib';
+
+let basePdf: Uint8Array;
+
+beforeAll(async () => {
+  // Create a minimal 1-page PDF to serve as the Playwright base PDF
+  const doc = await PDFDocument.create();
+  doc.addPage([612, 792]);
+  basePdf = await doc.save();
+});
+
+function makePage(fields: ExtractedPage['fields'] = []): ExtractedPage {
+  return {
+    widthPx: 816, heightPx: 1056, widthPt: 612, heightPt: 792,
+    fields,
+    texts: [],
+    boxes: [],
+  };
+}
 
 describe('generatePdf', () => {
   it('produces a valid PDF binary', async () => {
     const pages = [
-      {
-        widthPx: 816, heightPx: 1056, widthPt: 612, heightPt: 792,
-        fields: [
-          {
-            name: 'firstName',
-            type: 'text' as const,
-            pageIndex: 0,
-            x: 50, y: 100, width: 200, height: 24,
-            defaultValue: 'Bob',
-          },
-        ],
-      },
+      makePage([
+        {
+          name: 'firstName',
+          type: 'text',
+          pageIndex: 0,
+          x: 50, y: 100, width: 200, height: 24,
+          xPt: 37.5, yTopPt: 75, widthPt: 150, heightPt: 18,
+        },
+      ]),
     ];
 
-    const result = await generatePdf(pages, { firstName: 'Bob' });
+    const result = await generatePdf(basePdf, pages);
     expect(result).toBeInstanceOf(Uint8Array);
 
     const doc = await PDFDocument.load(result);
@@ -29,87 +43,84 @@ describe('generatePdf', () => {
 
     const form = doc.getForm();
     const field = form.getTextField('firstName');
-    expect(field.getText()).toBe('Bob');
+    expect(field).toBeDefined();
   });
 
   it('generates a field with empty value when not in data', async () => {
     const pages = [
-      {
-        widthPx: 816, heightPx: 1056, widthPt: 612, heightPt: 792,
-        fields: [
-          {
-            name: 'lastName',
-            type: 'text' as const,
-            pageIndex: 0,
-            x: 50, y: 50, width: 200, height: 24,
-          },
-        ],
-      },
+      makePage([
+        {
+          name: 'lastName',
+          type: 'text',
+          pageIndex: 0,
+          x: 50, y: 50, width: 200, height: 24,
+          xPt: 37.5, yTopPt: 37.5, widthPt: 150, heightPt: 18,
+        },
+      ]),
     ];
 
-    const result = await generatePdf(pages, {});
+    const result = await generatePdf(basePdf, pages);
     const doc = await PDFDocument.load(result);
     const field = doc.getForm().getTextField('lastName');
-    expect(field.getText()).toBe('');
+    expect(field.getText() ?? '').toBe('');
   });
 
   it('generates multiple pages', async () => {
+    // Create a 2-page base PDF
+    const doc = await PDFDocument.create();
+    doc.addPage([612, 792]);
+    doc.addPage([612, 792]);
+    const twoPagePdf = await doc.save();
+
     const pages = [
-      {
-        widthPx: 816, heightPx: 1056, widthPt: 612, heightPt: 792,
-        fields: [],
-        texts: [],
-      },
-      {
-        widthPx: 816, heightPx: 1056, widthPt: 612, heightPt: 792,
-        fields: [],
-        texts: [],
-      },
+      makePage(),
+      makePage(),
     ];
 
-    const result = await generatePdf(pages, {});
-    const doc = await PDFDocument.load(result);
-    expect(doc.getPageCount()).toBe(2);
+    const result = await generatePdf(twoPagePdf, pages);
+    const loaded = await PDFDocument.load(result);
+    expect(loaded.getPageCount()).toBe(2);
   });
-});
 
-describe('generatePdf - text', () => {
-  it('draws static text onto the page', async () => {
-    const page: ExtractedPage = {
-      widthPx: 816, heightPx: 1056, widthPt: 612, heightPt: 792,
-      fields: [],
-      texts: [
-        { text: 'Hello World', pageIndex: 0, x: 10, y: 10, width: 200, height: 20, fontSize: 12, bold: false, color: '#000000' }
-      ],
-    };
-    const result = await generatePdf([page], {});
-    // pdf-lib compresses content streams with FlateDecode and encodes text as
-    // hex (e.g. <48656C6C6F20576F726C64> for "Hello World"). Decompress each
-    // stream and verify the hex-encoded text is present.
-    const buf = Buffer.from(result);
-    const streamMarker = Buffer.from('stream\n');
-    const endStreamMarker = Buffer.from('\nendstream');
-    let found = false;
-    let offset = 0;
-    const helloWorldHex = Buffer.from('Hello World').toString('hex').toUpperCase();
-    while (offset < buf.length) {
-      const streamStart = buf.indexOf(streamMarker, offset);
-      if (streamStart === -1) break;
-      const contentStart = streamStart + streamMarker.length;
-      const streamEnd = buf.indexOf(endStreamMarker, contentStart);
-      if (streamEnd === -1) break;
-      const streamBytes = buf.slice(contentStart, streamEnd);
-      try {
-        const decompressed = inflateSync(streamBytes).toString('ascii');
-        if (decompressed.toUpperCase().includes(helloWorldHex)) {
-          found = true;
-          break;
-        }
-      } catch {
-        // not a deflate stream, skip
-      }
-      offset = contentStart;
-    }
-    expect(found).toBe(true);
+  it('creates date fields with AA validation dict', async () => {
+    const pages = [
+      makePage([
+        {
+          name: 'dob',
+          type: 'date',
+          pageIndex: 0,
+          x: 50, y: 100, width: 200, height: 24,
+          xPt: 37.5, yTopPt: 75, widthPt: 150, heightPt: 18,
+        },
+      ]),
+    ];
+
+    const result = await generatePdf(basePdf, pages);
+    const doc = await PDFDocument.load(result);
+    const form = doc.getForm();
+    const field = form.getTextField('dob');
+    expect(field).toBeDefined();
+    // AA dict should be present on the acroField
+    const aaEntry = field.acroField.dict.lookup(PDFName.of('AA'));
+    expect(aaEntry).toBeDefined();
+  });
+
+  it('skips fields without PDF-space coordinates', async () => {
+    const pages = [
+      makePage([
+        {
+          name: 'noCoords',
+          type: 'text',
+          pageIndex: 0,
+          x: 50, y: 100, width: 200, height: 24,
+          // xPt/yTopPt/widthPt/heightPt intentionally omitted
+        },
+      ]),
+    ];
+
+    const result = await generatePdf(basePdf, pages);
+    const doc = await PDFDocument.load(result);
+    const form = doc.getForm();
+    expect(form.getFields()).toHaveLength(0);
   });
 });

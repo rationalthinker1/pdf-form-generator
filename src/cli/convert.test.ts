@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'bun:test';
 import { convertToPdfCoords } from './convert';
-import { PAGE_SIZES } from '../../index';
+import { PAGE_SIZES } from '../index';
 
 const letterPage = PAGE_SIZES.letter;
 
