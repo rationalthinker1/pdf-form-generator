@@ -38,9 +38,9 @@ const block = 'border-2 border-gray-800 divide-y-2 divide-gray-800'
 export default function CHPContractPage2() {
   const { register, watch, handleSubmit } = useForm<FormValues>({
     values: {
-      first_name: 'John',
-      last_name: 'Doe',
-      province: 'ON',
+      first_name: '',
+      last_name: '',
+      province: '',
     } as FormValues,
   });
 
@@ -52,7 +52,7 @@ export default function CHPContractPage2() {
         <Pdf.Page size="letter">
 
           {/* ── CUSTOMER INFORMATION ─────────────────────────────────────── */}
-          <div className={block}>
+          <Pdf.Box className={block}>
             <div className={row}>
               <InputField {...register('first_name')} name="p2.first_name" label="First Name" type="text" defaultValue={v.first_name} />
               <InputField {...register('last_name')} name="p2.last_name" label="Last Name" type="text" defaultValue={v.last_name} />
@@ -63,10 +63,10 @@ export default function CHPContractPage2() {
               <InputField {...register('cocustomer_last_name')} name="p2.cocustomer_last_name" label="Last Name" type="text" defaultValue={v.cocustomer_last_name} />
               <InputField {...register('cocustomer_date_of_birth')} name="p2.cocustomer_date_of_birth" label="Date of Birth" type="date" defaultValue={v.cocustomer_date_of_birth} />
             </div>
-          </div>
+          </Pdf.Box>
 
           {/* ── ADDRESS ──────────────────────────────────────────────────── */}
-          <div className={`${block} -mt-0.5`}>
+          <Pdf.Box className={`${block} -mt-0.5`}>
             <div className={row}>
               <InputField {...register('address')} name="p2.address" label="Address" type="text" defaultValue={v.address} />
               <InputField {...register('unit')} name="p2.unit" label="Unit #" type="text" defaultValue={v.unit} containerClassName="max-w-32" />
@@ -81,17 +81,17 @@ export default function CHPContractPage2() {
               <InputField {...register('home_phone')} name="p2.home_phone" label="Home Phone" type="text" defaultValue={v.home_phone} />
               <InputField {...register('mobile_or_office')} name="p2.mobile_or_office" label="Mobile/Office" type="text" defaultValue={v.mobile_or_office} />
             </div>
-          </div>
+          </Pdf.Box>
 
           {/* ── PLAN & START DATE ─────────────────────────────────────────── */}
-          <div className={`${block} -mt-0.5`}>
+          <Pdf.Box className={`${block} -mt-0.5`}>
             <div className={row}>
               <InputField {...register('start_date')} name="p2.start_date" label="Start Date" type="date" defaultValue={v.start_date} containerClassName="max-w-36" />
             </div>
-          </div>
+          </Pdf.Box>
 
           {/* ── CUSTOMER SIGNATURE BLOCK ─────────────────────────────────── */}
-          <div className={`${block} -mt-0.5`}>
+          <Pdf.Box className={`${block} -mt-0.5`}>
             <div className={row}>
               <InputField {...register('customer_signature')} name="p2.customer_signature" label="Customer Signature" type="text" defaultValue={v.customer_signature} />
             </div>
@@ -105,15 +105,15 @@ export default function CHPContractPage2() {
               <InputField {...register('customer_place_of_execution')} name="p2.customer_place_of_execution" label="City of Execution" type="text" defaultValue={v.customer_place_of_execution} />
               <InputField {...register('cocustomer_place_of_execution')} name="p2.cocustomer_place_of_execution" label="Co-Customer City of Execution" type="text" defaultValue={v.cocustomer_place_of_execution} />
             </div>
-          </div>
+          </Pdf.Box>
 
           {/* ── DEALER INFORMATION ───────────────────────────────────────── */}
-          <div className={`${block} -mt-0.5`}>
+          <Pdf.Box className={`${block} -mt-0.5`}>
             <div className={row}>
               <InputField {...register('dealer_rep_name')} name="p2.dealer_rep_name" label="Dealer Rep Name" type="text" defaultValue={v.dealer_rep_name} />
               <InputField {...register('dealer_name_and_phone_number')} name="p2.dealer_name_and_phone_number" label="Dealer Name & Phone" type="text" defaultValue={v.dealer_name_and_phone_number} />
             </div>
-          </div>
+          </Pdf.Box>
 
         </Pdf.Page>
       </Pdf.Document>

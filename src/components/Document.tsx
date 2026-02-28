@@ -50,7 +50,7 @@ export function Document({ children }: DocumentProps) {
               y: rect.top - pageRect.top,
               width: rect.width,
               height: rect.height,
-              defaultValue: storedDefault ?? window.__formData?.[name],
+              defaultValue: window.__formData?.[name] ?? storedDefault,
             };
           });
 
@@ -60,8 +60,13 @@ export function Document({ children }: DocumentProps) {
             const fs = el.dataset.pdfFontSize;
             // Use getComputedStyle so we always get rgb() regardless of CSS color format
             const computedColor = getComputedStyle(el).color;
+            const cs = getComputedStyle(el);
+            const transform = cs.textTransform;
+            let text = el.textContent ?? '';
+            if (transform === 'uppercase') text = text.toUpperCase();
+            else if (transform === 'lowercase') text = text.toLowerCase();
             return {
-              text: el.textContent ?? '',
+              text,
               pageIndex,
               x: rect.left - pageRect.left,
               y: rect.top - pageRect.top,
@@ -73,7 +78,19 @@ export function Document({ children }: DocumentProps) {
             };
           });
 
-        return { ...dims, fields, texts };
+        const boxes = Array.from(pageEl.querySelectorAll<HTMLElement>('[data-pdf-box]'))
+          .map(el => {
+            const rect = el.getBoundingClientRect();
+            return {
+              pageIndex,
+              x: rect.left - pageRect.left,
+              y: rect.top - pageRect.top,
+              width: rect.width,
+              height: rect.height,
+            };
+          });
+
+        return { ...dims, fields, texts, boxes };
       });
 
       return { pages };

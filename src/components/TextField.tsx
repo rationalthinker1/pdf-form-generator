@@ -17,7 +17,9 @@ export function TextField({ name, label, defaultValue, className, style }: TextF
       className={[baseClass, className].filter(Boolean).join(' ')}
       style={style}
     >
-      {defaultValue ?? <span className="text-gray-400 italic">{label ?? name}</span>}
+      {!defaultValue && (
+        <span className="text-gray-400 italic print:hidden">{label ?? name}</span>
+      )}
     </div>
   )
 }

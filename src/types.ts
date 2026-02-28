@@ -46,6 +46,15 @@ export interface ExtractedPage {
   heightPt: number
   fields: ExtractedField[]
   texts: ExtractedText[]
+  boxes: ExtractedBox[]
+}
+
+export interface ExtractedBox {
+  pageIndex: number
+  x: number
+  y: number
+  width: number
+  height: number
 }
 
 export interface ExtractedData {

@@ -51,8 +51,8 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
           name={name}
           label={label}
           defaultValue={value ?? defaultValue}
-          className={`${textClass} ${textClassName}`}
-          style={{ ...textStyle, ...(onChange !== undefined || type === 'date' ? { color: 'transparent' } : {}) }}
+          className={`${textClass} ${textClassName} ${onChange !== undefined || type === 'date' ? 'text-transparent print:text-gray-800' : ''}`}
+          style={textStyle}
         />
         {onChange !== undefined && (type === 'text' || type === 'textarea') && (
           <input
@@ -61,7 +61,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
             onChange={onChange}
             onBlur={onBlur}
             placeholder={label}
-            className="absolute inset-0 h-full w-full bg-transparent px-2 py-1 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-blue-400"
+            className="absolute inset-0 h-full w-full bg-transparent px-2 py-1 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-blue-400 print:hidden"
           />
         )}
         {type === 'date' && (
@@ -71,7 +71,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
             defaultValue={value ?? defaultValue}
             onChange={onChange}
             onBlur={onBlur}
-            className="absolute inset-0 h-full w-full bg-transparent px-2 py-1 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-blue-400"
+            className="absolute inset-0 h-full w-full bg-transparent px-2 py-1 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-blue-400 print:hidden"
           />
         )}
       </div>

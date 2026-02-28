@@ -10,6 +10,9 @@ export async function measureForm(
     args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-setuid-sandbox'],
   });
   const page = await browser.newPage();
+  // Emulate print media so Tailwind's print: variants apply during measurement.
+  // Form authors can use print:hidden, print:bg-white, etc. to control PDF output.
+  await page.emulateMedia({ media: 'print' });
 
   page.on('console', msg => {
     if (msg.type() === 'error') console.log(`  [browser] ${msg.text()}`)
@@ -49,6 +52,7 @@ export async function measureForm(
 
     const totalFields = data.pages.reduce((n: number, p: { fields: unknown[] }) => n + p.fields.length, 0)
     console.log(`  Extracted ${totalFields} field(s) across ${data.pages.length} page(s)`)
+    data.pages[0]?.fields.slice(0, 3).forEach((f: any) => console.log(`  field: ${f.name} = ${JSON.stringify(f.defaultValue)}`))
 
     return data;
   } finally {

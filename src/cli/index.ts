@@ -150,7 +150,7 @@ async function main() {
     console.log(`Found ${totalFields} field(s) across ${extracted.pages.length} page(s)`)
 
     console.log('Generating AcroForm PDF...')
-    const pdfBytes = await generatePdf(extracted.pages, data)
+    const pdfBytes = await generatePdf(extracted.pages)
 
     const outputPath = resolve(process.cwd(), output)
     writeFileSync(outputPath, pdfBytes)

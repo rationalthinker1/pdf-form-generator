@@ -1,4 +1,4 @@
-import { PDFDocument, PDFString, PDFName, StandardFonts, rgb } from 'pdf-lib';
+import { PDFDocument, PDFName, StandardFonts, rgb } from 'pdf-lib';
 import { convertToPdfCoords } from './convert';
 import type { ExtractedPage } from '../index';
 
@@ -11,7 +11,6 @@ function hexToRgb(hex: string) {
 
 export async function generatePdf(
   pages: ExtractedPage[],
-  data: Record<string, string>
 ): Promise<Uint8Array> {
   const pdfDoc = await PDFDocument.create();
   const form = pdfDoc.getForm();
@@ -19,67 +18,79 @@ export async function generatePdf(
   const helvetica = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
+  const FONT_SIZE = 10;
+
   for (const pageData of pages) {
     const page = pdfDoc.addPage([pageData.widthPt, pageData.heightPt]);
 
-    for (const field of pageData.fields) {
-      const coords = convertToPdfCoords(field, pageData);
-      const value = data[field.name] ?? field.defaultValue ?? '';
-
-      if (field.type === 'text' || field.type === 'textarea') {
-        const tf = form.createTextField(field.name);
-        // Always leave the AcroForm field empty so the viewer doesn't render
-        // its own auto-sized text over our static drawn value.
-        tf.acroField.dict.set(PDFName.of('V'), PDFString.of(''));
-        if (field.type === 'textarea') tf.enableMultiline();
-        tf.addToPage(page, { ...coords, font: helvetica });
-        // Draw pre-filled value as static page content at a fixed 10pt size.
-        if (value) {
-          const FONT_SIZE = 10;
-          const ascent = helvetica.heightAtSize(FONT_SIZE);
-          const textY = coords.y + (coords.height - ascent) / 2;
-          page.drawText(value, {
-            x: coords.x + 3,
-            y: textY,
-            size: FONT_SIZE,
-            font: helvetica,
-            color: rgb(0, 0, 0),
-          });
-        }
-      }
-    }
-
+    // Draw static texts (labels, headings) BEFORE AcroForm annotations
     for (const text of pageData.texts ?? []) {
       const coords = convertToPdfCoords(text, pageData);
       const font = text.bold ? helveticaBold : helvetica;
       const size = text.fontSize * (72 / 96);
       page.drawText(text.text, {
         x: coords.x,
-        y: coords.y,
+        y: coords.y + 2,
         size,
         font,
         color: hexToRgb(text.color),
       });
     }
+
+    for (const field of pageData.fields) {
+      const coords = convertToPdfCoords(field, pageData);
+
+      if (field.type === 'text' || field.type === 'textarea') {
+        // Draw pre-filled value as page text so it renders at the correct size
+        const value = field.defaultValue ?? '';
+        if (value) {
+          const size = FONT_SIZE;
+          const y = coords.y + (coords.height - size) / 2;
+          page.drawText(value, {
+            x: coords.x + 4,
+            y,
+            size,
+            font: helvetica,
+            color: rgb(0.094, 0.094, 0.094), // text-gray-800 ≈ #181818
+          });
+        }
+
+        const tf = form.createTextField(field.name);
+        if (field.type === 'textarea') tf.enableMultiline();
+        // No background — widget is transparent so page text shows through
+        tf.addToPage(page, {
+          ...coords,
+          font: helvetica,
+          backgroundColor: undefined,
+          borderColor: undefined,
+          borderWidth: 0,
+        });
+        tf.setFontSize(FONT_SIZE);
+      }
+    }
+
+    for (const box of pageData.boxes ?? []) {
+      const coords = convertToPdfCoords(box, pageData);
+      page.drawRectangle({
+        x: coords.x,
+        y: coords.y,
+        width: coords.width,
+        height: coords.height,
+        borderColor: rgb(0, 0, 0),
+        borderWidth: 1.5,
+      });
+    }
   }
 
-  // Generate appearance streams with auto-sized font, then patch all DAs to 10pt
-  // and remove the AP streams so viewers render from DA with the fixed font size.
-  form.updateFieldAppearances(helvetica);
+  // Remove AP streams so PDF viewers use DA (font size) for editing
+  const pdfBytes = await pdfDoc.save({ useObjectStreams: false });
+  const pdfDoc2 = await PDFDocument.load(pdfBytes, { ignoreEncryption: true });
 
-  const daKey = PDFName.of('DA');
-  const apKey = PDFName.of('AP');
-  for (const field of form.getFields()) {
-    const da = field.acroField.dict.get(daKey);
-    if (da instanceof PDFString) {
-      field.acroField.dict.set(daKey, PDFString.of(da.decodeText().replace(/\d+(\.\d+)? Tf/, '10 Tf')));
-    }
-    // Remove cached AP streams — viewers will re-render from DA at the correct size
-    field.acroField.dict.delete(apKey);
+  for (const field of pdfDoc2.getForm().getFields()) {
     for (const widget of field.acroField.getWidgets()) {
-      widget.dict.delete(apKey);
+      widget.dict.delete(PDFName.of('AP'));
     }
   }
 
-  return pdfDoc.save({ useObjectStreams: false });
+  return pdfDoc2.save({ useObjectStreams: false });
 }
