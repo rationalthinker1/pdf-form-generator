@@ -1,6 +1,6 @@
 import { PDFDocument, PDFString, PDFName, StandardFonts, rgb } from 'pdf-lib';
 import { convertToPdfCoords } from './convert';
-import type { ExtractedPage } from '../../index';
+import type { ExtractedPage } from '../index';
 
 function hexToRgb(hex: string) {
   const r = parseInt(hex.slice(1, 3), 16) / 255;
@@ -28,15 +28,24 @@ export async function generatePdf(
 
       if (field.type === 'text' || field.type === 'textarea') {
         const tf = form.createTextField(field.name);
-        if (value) {
-          tf.setText(value);
-        } else {
-          // pdf-lib setText('') leaves getValue() as undefined after save/load;
-          // writing the V entry directly ensures getText() returns '' as expected.
-          tf.acroField.dict.set(PDFName.of('V'), PDFString.of(''));
-        }
+        tf.acroField.dict.set(PDFName.of('V'), PDFString.of(value));
         if (field.type === 'textarea') tf.enableMultiline();
-        tf.addToPage(page, coords);
+        tf.addToPage(page, { ...coords, font: helvetica });
+        // Draw pre-filled value as static page content so it renders at the correct
+        // size regardless of how the PDF viewer handles AcroForm appearance streams.
+        if (value) {
+          const FONT_SIZE = 10;
+          // coords.y is the bottom of the field (PDF bottom-left origin).
+          // Center the text vertically: baseline = bottom + (height - font ascent) / 2
+          const textY = coords.y + (coords.height - FONT_SIZE * 0.75) / 2;
+          page.drawText(value, {
+            x: coords.x + 3,
+            y: textY,
+            size: FONT_SIZE,
+            font: helvetica,
+            color: rgb(0, 0, 0),
+          });
+        }
       }
     }
 
@@ -51,6 +60,24 @@ export async function generatePdf(
         font,
         color: hexToRgb(text.color),
       });
+    }
+  }
+
+  // Generate appearance streams with auto-sized font, then patch all DAs to 10pt
+  // and remove the AP streams so viewers render from DA with the fixed font size.
+  form.updateFieldAppearances(helvetica);
+
+  const daKey = PDFName.of('DA');
+  const apKey = PDFName.of('AP');
+  for (const field of form.getFields()) {
+    const da = field.acroField.dict.get(daKey);
+    if (da instanceof PDFString) {
+      field.acroField.dict.set(daKey, PDFString.of(da.decodeText().replace(/\d+(\.\d+)? Tf/, '10 Tf')));
+    }
+    // Remove cached AP streams — viewers will re-render from DA at the correct size
+    field.acroField.dict.delete(apKey);
+    for (const widget of field.acroField.getWidgets()) {
+      widget.dict.delete(apKey);
     }
   }
 
