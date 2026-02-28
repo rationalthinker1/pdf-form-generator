@@ -5,21 +5,21 @@ export type {
   ExtractedField,
   ExtractedPage,
   ExtractedData,
-  TextRegistration,
   ExtractedText,
-} from './types'
+} from './types';
 
-export { PAGE_SIZES } from './types'
-export { useDocumentContext } from './context/DocumentContext'
+export { PAGE_SIZES } from './types';
 
-import { Document } from './components/Document'
-import { Page } from './components/Page'
-import { TextField } from './components/TextField'
-import { Text } from './components/Text'
+import { Document } from './components/Document';
+import { Page } from './components/Page';
+import { TextField } from './components/TextField';
+import { Text } from './components/Text';
 
 export const Pdf = {
   Document,
   Page,
   TextField,
   Text,
-} as const
+} as const;
+
+export { InputField } from './components/InputField';

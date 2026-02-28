@@ -1,38 +1,32 @@
-import { useRef, useEffect, type ReactNode } from 'react'
-import { useDocumentContext } from '../context/DocumentContext'
+import { useRef, useEffect, type ReactNode } from 'react';
 
 interface TextProps {
-  fontSize?: number
-  bold?: boolean
-  color?: string
-  children: ReactNode
+  className?: string
+  style?: React.CSSProperties
+  children?: ReactNode
 }
 
-export function Text({ fontSize = 12, bold = false, color = '#000000', children }: TextProps) {
-  const ref = useRef<HTMLDivElement>(null)
-  const { registerText, unregisterText } = useDocumentContext()
-
-  const text = typeof children === 'string' ? children : String(children ?? '')
+export function Text({ className, style, children }: TextProps) {
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    registerText({ ref, text, fontSize, bold, color })
-    return () => unregisterText(ref)
-  }, [text, fontSize, bold, color]) // eslint-disable-line react-hooks/exhaustive-deps
+    const el = ref.current;
+    if (!el) return;
+    const cs = getComputedStyle(el);
+    const fontSizePx = parseFloat(cs.fontSize);
+    el.dataset.pdfFontSize = String(Math.round(fontSizePx * 72 / 96));
+    el.dataset.pdfBold = cs.fontWeight >= '600' ? 'true' : 'false';
+    el.dataset.pdfColor = cs.color;
+  });
 
   return (
     <div
       ref={ref}
+      className={className}
       data-pdf-text="true"
-      style={{
-        fontSize,
-        fontWeight: bold ? 'bold' : 'normal',
-        color,
-        lineHeight: 1,
-        userSelect: 'none',
-        pointerEvents: 'none',
-      }}
+      style={style}
     >
       {children}
     </div>
-  )
+  );
 }

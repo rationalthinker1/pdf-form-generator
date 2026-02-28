@@ -59,14 +59,16 @@ createRoot(document.getElementById('root')!).render(<FormComponent />)
   // corePackageMain = .../packages/core/dist/index.js (React is external in this build)
   const corePackageMain = cliRequire.resolve('@pdf-form/core')
 
-  // React lives in the core package's node_modules (installed as peer dep there)
-  const coreRequire = createRequire(corePackageMain)
-  const reactMain = coreRequire.resolve('react')
-  const reactDomMain = coreRequire.resolve('react-dom')
-  const reactJsxRuntime = coreRequire.resolve('react/jsx-runtime')
-  const reactJsxDevRuntime = coreRequire.resolve('react/jsx-dev-runtime')
+  // Resolve React from the workspace root so that all packages (core, react-hook-form, etc.)
+  // share the exact same physical React files — preventing duplicate-React hook errors.
+  const rootRequire = createRequire(resolve(process.cwd(), 'package.json'))
+  const reactMain = rootRequire.resolve('react')
+  const reactDomMain = rootRequire.resolve('react-dom')
+  const reactJsxRuntime = rootRequire.resolve('react/jsx-runtime')
+  const reactJsxDevRuntime = rootRequire.resolve('react/jsx-dev-runtime')
 
   const cliNodeModules = resolve(__dirname, '..', 'node_modules')
+  const rootNodeModules = resolve(process.cwd(), 'node_modules')
 
   const server = await createServer({
     root: tmpDir,
@@ -74,12 +76,14 @@ createRoot(document.getElementById('root')!).render(<FormComponent />)
     server: {
       port: 0,
       strictPort: false,
+      host: '::',
       // Allow Vite to serve files from the form's directory and node_modules
       fs: {
         allow: [
           tmpDir,
           resolve(process.cwd()),
           cliNodeModules,
+          rootNodeModules,
           resolve(dirname(reactMain), '..'),
         ],
         strict: false,
@@ -99,10 +103,15 @@ createRoot(document.getElementById('root')!).render(<FormComponent />)
       dedupe: ['react', 'react-dom'],
     },
     optimizeDeps: {
-      // Disable dep discovery since we supply explicit aliases; pre-bundle react/react-dom
-      include: ['react', 'react-dom', 'react-dom/client'],
-      entries: [],
+      // Bundle all CJS deps together in one esbuild pass so they share one
+      // React instance. Splitting them into separate passes (e.g. exclude
+      // react-hook-form) causes esbuild to inline React into each chunk.
+      include: ['react', 'react-dom', 'react-dom/client', 'react-hook-form'],
+      // Don't crawl the whole monorepo — only scan our temp entry
+      entries: [resolve(tmpDir, 'entry.tsx')],
     },
+    // Persist dep cache to a stable location so subsequent starts are fast
+    cacheDir: resolve(__dirname, '..', 'node_modules', '.vite-dev-cache'),
   })
 
   await server.listen()

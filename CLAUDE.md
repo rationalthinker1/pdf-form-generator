@@ -16,7 +16,8 @@ packages/
 ├── core/    # @pdf-form/core — React component library (published)
 └── cli/     # @pdf-form/cli  — CLI tool (published)
 examples/
-└── hvac-contract/
+├── hvac-contract/
+└── chp-contract/
 ```
 
 **Data flow:**
@@ -35,6 +36,7 @@ export default function MyForm() {
   return (
     <Pdf.Document>
       <Pdf.Page size="letter">
+        <Pdf.Text>FIRST NAME</Pdf.Text>
         <Pdf.TextField name="firstName" label="First Name" />
       </Pdf.Page>
     </Pdf.Document>
@@ -43,15 +45,63 @@ export default function MyForm() {
 ```
 
 ```bash
+# Generate fillable PDF
 generate-pdf form.tsx '{"firstName":"Bob"}' -o output.pdf
+
+# Live dev preview (opens browser, hot-reloads)
+generate-pdf dev form.tsx
 ```
+
+## Dev Command
+
+The `dev` subcommand starts a Vite server and opens the form in a browser for layout design and preview. It does **not** generate a PDF.
+
+```bash
+bun packages/cli/src/index.ts dev examples/chp-contract/form.tsx
+# or via root script:
+bun dev examples/chp-contract/form.tsx
+```
+
+On WSL, it prints both a `Local` and `Network` URL — use the Network URL in the Windows browser.
+
+## Dev Preview Pattern (react-hook-form)
+
+To test forms with sample data during `dev`, use `react-hook-form`'s `useForm` + `watch()` to flow values into `defaultValue` props. **This is purely for dev-time preview** — Playwright reads `data-field-*` DOM attributes directly and ignores the React form wrapper entirely when generating PDFs.
+
+```tsx
+import { useForm } from 'react-hook-form'
+import { Pdf } from '@pdf-form/core'
+
+interface FormValues { firstName: string; lastName: string }
+
+export default function MyForm() {
+  const { watch } = useForm<FormValues>({
+    defaultValues: { firstName: 'John', lastName: 'Doe' },
+  })
+  const v = watch()
+
+  return (
+    <Pdf.Document>
+      <Pdf.Page size="letter">
+        <Pdf.TextField name="firstName" label="First Name" defaultValue={v.firstName} />
+        <Pdf.TextField name="lastName" label="Last Name" defaultValue={v.lastName} />
+      </Pdf.Page>
+    </Pdf.Document>
+  )
+}
+```
+
+- `useForm({ defaultValues })` — seed sample data for preview
+- `watch()` — live values flow into `defaultValue` on each re-render
+- `handleSubmit` — optional, not used during PDF generation
+- `react-hook-form` is a root workspace dependency (`package.json`)
 
 ## Namespace Export Convention
 
 Components use single-word names (`Document`, `Page`, `TextField`) exported under the `Pdf` namespace to avoid import collisions with other libraries (e.g. `react-pdf`).
 
 ```ts
-export const Pdf = { Document, Page, TextField } as const
+export const Pdf = { Document, Page, TextField, Text } as const
 ```
 
 ## Tech Stack
@@ -66,6 +116,7 @@ export const Pdf = { Document, Page, TextField } as const
 | Browser automation | Playwright (Chromium) |
 | PDF generation | pdf-lib |
 | Test runner | `bun test` (Jest-compatible) |
+| Dev preview forms | react-hook-form (`useForm` + `watch`) |
 | Linting | ESLint + typescript-eslint + eslint-plugin-react |
 | Formatting | Prettier + prettier-plugin-tailwindcss |
 
@@ -133,13 +184,15 @@ window.__formData = { firstName: 'Bob' } // injected by CLI before page load
 window.__extractFieldData()               // returns ExtractedData
 ```
 
-## Field Types (implementation order)
+## Field Types
 
-1. `TextField` — `form.createTextField()` ← **start here**
-2. `TextArea` — `form.createTextField()` + `enableMultiline()`
-3. `CheckboxField` — `form.createCheckBox()`
-4. `DropdownField` — `form.createDropdown()`
-5. `RadioGroup` — `form.createRadioGroup()`
+| Component | Status | pdf-lib API |
+|-----------|--------|-------------|
+| `TextField` | ✅ Done | `form.createTextField()` |
+| `TextArea` | pending | `form.createTextField()` + `enableMultiline()` |
+| `CheckboxField` | pending | `form.createCheckBox()` |
+| `DropdownField` | pending | `form.createDropdown()` |
+| `RadioGroup` | pending | `form.createRadioGroup()` |
 
 ## Non-Negotiable Constraints
 

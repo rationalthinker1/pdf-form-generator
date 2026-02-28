@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "bun build ./src/index.ts --outdir ./dist --target browser --external react --external react-dom",
+    "build": "bun build ./src/index.ts --outdir ./dist --target browser --external react --external react-dom && tsc -p tsconfig.build.json --emitDeclarationOnly --noEmit false",
     "test": "bun test"
   },
   "peerDependencies": {

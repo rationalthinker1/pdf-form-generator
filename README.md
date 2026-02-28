@@ -1,142 +1,73 @@
-# PDF Form Generator
+# React + TypeScript + Vite
 
-Generate real interactive AcroForm PDFs from declarative React components.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-This is **not** a static PDF renderer, screenshot tool, or canvas rasterizer. It produces legitimate AcroForm fields embedded in the PDF binary via [pdf-lib](https://github.com/Hopding/pdf-lib).
+Currently, two official plugins are available:
 
-## How It Works
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
-1. You write a form using React components (`<Pdf.Document>`, `<Pdf.Page>`, `<Pdf.TextField>`, etc.)
-2. The CLI starts a Vite dev server and opens your form in headless Chromium via Playwright
-3. Field positions and dimensions are extracted from the DOM
-4. Coordinates are converted from px to PDF points (Y-axis flip, scale 0.75)
-5. pdf-lib generates an AcroForm PDF with real fillable fields
+## React Compiler
 
-## Quick Start
+The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
 
-```bash
-# Install dependencies
-bun install
+## Expanding the ESLint configuration
 
-# Build all packages
-bun run build
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-# Generate a PDF from a form
-generate-pdf form.tsx '{"firstName":"Bob"}' -o output.pdf
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
+
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
 
-## Packages
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 ```
-packages/
-├── core/   # @pdf-form/core — React component library
-└── cli/    # @pdf-form/cli  — CLI tool (generate-pdf command)
-examples/
-├── hvac-contract/
-└── chp-contract/
-```
-
-## Usage
-
-### Define a form
-
-```tsx
-import { Pdf } from '@pdf-form/core'
-
-export default function MyForm() {
-  return (
-    <Pdf.Document>
-      <Pdf.Page size="letter">
-        <Pdf.Text fontSize={24} bold>Service Agreement</Pdf.Text>
-        <Pdf.TextField name="customerName" label="Customer Name" />
-        <Pdf.TextField name="serviceDate" label="Date" />
-      </Pdf.Page>
-    </Pdf.Document>
-  )
-}
-```
-
-### Generate the PDF
-
-```bash
-# Basic usage
-generate-pdf form.tsx -o contract.pdf
-
-# Pre-fill fields with data
-generate-pdf form.tsx '{"customerName":"Alice","serviceDate":"2026-01-15"}' -o contract.pdf
-
-# Load data from a file
-generate-pdf form.tsx @data.json -o contract.pdf
-
-# Open the PDF after generating
-generate-pdf form.tsx -o contract.pdf --open
-```
-
-## Components
-
-| Component | Description |
-|-----------|-------------|
-| `Pdf.Document` | Root container for the PDF form |
-| `Pdf.Page` | A page within the document (`size`: `"letter"` or `"a4"`) |
-| `Pdf.TextField` | Single-line text input field |
-| `Pdf.Text` | Static text (labels, headings) |
-
-### `Pdf.TextField`
-
-```tsx
-<Pdf.TextField name="firstName" label="First Name" defaultValue="Bob" />
-```
-
-- `name` — unique field name across the document
-- `label` — optional label displayed above the field
-- `defaultValue` — optional pre-filled value
-
-### `Pdf.Text`
-
-```tsx
-<Pdf.Text fontSize={12} bold color="#333">Section Title</Pdf.Text>
-```
-
-- `fontSize` — font size in points
-- `bold` — optional bold styling
-- `color` — optional text color
-
-## Page Sizes
-
-| Name | Preview (px) | PDF (pt) |
-|------|-------------|----------|
-| `letter` | 816 x 1056 | 612 x 792 |
-| `a4` | 794 x 1123 | 595 x 842 |
-
-## Development
-
-```bash
-# Run all tests
-bun test
-
-# Run tests for a single package
-cd packages/core && bun test
-
-# Lint
-bun run lint
-
-# Format
-bun run format
-```
-
-## Tech Stack
-
-| Role | Tool |
-|------|------|
-| Runtime + package manager | Bun |
-| Language | TypeScript (strict) |
-| Framework | React 18 |
-| Styling | Tailwind CSS |
-| Dev server | Vite |
-| Browser automation | Playwright |
-| PDF generation | pdf-lib |
-| Testing | bun test |
-
-## License
-
-MIT

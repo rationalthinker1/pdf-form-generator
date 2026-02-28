@@ -1,7 +1,6 @@
-import { useRef, useEffect, type ReactNode } from 'react'
-import { useDocumentContext } from '../context/DocumentContext'
-import { PAGE_SIZES } from '../types'
-import type { PageSize } from '../types'
+import type { ReactNode } from 'react';
+import { PAGE_SIZES } from '../types';
+import type { PageSize } from '../types';
 
 interface PageProps {
   size?: PageSize
@@ -9,18 +8,11 @@ interface PageProps {
 }
 
 export function Page({ size = 'letter', children }: PageProps) {
-  const ref = useRef<HTMLDivElement>(null)
-  const { registerPage } = useDocumentContext()
-  const dims = PAGE_SIZES[size]
-
-  useEffect(() => {
-    registerPage({ size, ref })
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  const dims = PAGE_SIZES[size];
 
   return (
     <div
-      ref={ref}
-      data-size={size}
+      data-pdf-page={size}
       className="relative bg-white shadow-lg"
       style={{
         width: dims.widthPx,
@@ -30,5 +22,5 @@ export function Page({ size = 'letter', children }: PageProps) {
     >
       {children}
     </div>
-  )
+  );
 }

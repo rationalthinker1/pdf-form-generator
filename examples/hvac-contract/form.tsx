@@ -1,4 +1,4 @@
-import { Pdf } from '@pdf-form/core'
+import { Pdf } from '@pdf-form/core';
 
 export default function HvacContract() {
   return (
@@ -64,5 +64,5 @@ export default function HvacContract() {
         </div>
       </Pdf.Page>
     </Pdf.Document>
-  )
+  );
 }
