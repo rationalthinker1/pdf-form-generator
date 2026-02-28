@@ -16,6 +16,7 @@ import { Page } from './components/Page';
 import { TextField } from './components/TextField';
 import { Text } from './components/Text';
 import { Box } from './components/Box';
+import { Script } from './components/Script';
 
 export const Pdf = {
   Document,
@@ -23,6 +24,7 @@ export const Pdf = {
   TextField,
   Text,
   Box,
+  Script,
 } as const;
 
 export { InputField } from './components/InputField';

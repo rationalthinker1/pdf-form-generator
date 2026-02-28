@@ -1,9 +1,9 @@
 import { PDFDocument, PDFName, PDFString, StandardFonts } from 'pdf-lib';
-import type { ExtractedPage } from '../index';
+import type { ExtractedData } from '../index';
 
 export async function generatePdf(
   playwrightPdf: Uint8Array,
-  pages: ExtractedPage[],
+  { pages, scripts }: ExtractedData,
 ): Promise<Uint8Array> {
   const pdfDoc = await PDFDocument.load(playwrightPdf, { ignoreEncryption: true });
   const form = pdfDoc.getForm();
@@ -16,17 +16,10 @@ export async function generatePdf(
     for (const field of pageData.fields) {
       if (field.xPt === undefined || field.yTopPt === undefined || field.widthPt === undefined || field.heightPt === undefined) continue;
 
-      // Playwright PDF Y-axis: origin is top-left of the whole document.
-      // pdf-lib Y-axis: origin is bottom-left of each page.
-      // Each PDF page is 792pt tall (letter). Find which page this field lands on.
       const page = pdfPages[field.pageIndex];
       if (!page) continue;
       const { height: pageHeightPt } = page.getSize();
 
-      // yTopPt is distance from document top; convert to pdf-lib bottom-origin within the page
-      // For single-page: pdfY = pageHeight - yTopPt - heightPt
-      // For multi-page: need page offset. Playwright stacks pages vertically in the PDF.
-      // Page N starts at N * pageHeightPt from document top.
       const pageTopPt = field.pageIndex * pageHeightPt;
       const yPt = pageHeightPt - (field.yTopPt - pageTopPt) - field.heightPt;
 
@@ -47,20 +40,39 @@ export async function generatePdf(
         tf.setFontSize(FONT_SIZE);
 
         if (field.type === 'date') {
-          const aaDict = pdfDoc.context.obj({
-            K: pdfDoc.context.obj({
-              S: PDFName.of('JavaScript'),
-              JS: PDFString.of('AFDate_KeystrokeEx("yyyy-mm-dd")'),
-            }),
-            F: pdfDoc.context.obj({
-              S: PDFName.of('JavaScript'),
-              JS: PDFString.of('AFDate_FormatEx("yyyy-mm-dd")'),
-            }),
-          });
-          tf.acroField.dict.set(PDFName.of('AA'), aaDict);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const aaDict: Record<string, any> = {
+            K: pdfDoc.context.obj({ S: PDFName.of('JavaScript'), JS: PDFString.of('AFDate_KeystrokeEx("yyyy-mm-dd")') }),
+            F: pdfDoc.context.obj({ S: PDFName.of('JavaScript'), JS: PDFString.of('AFDate_FormatEx("yyyy-mm-dd")') }),
+          };
+          tf.acroField.dict.set(PDFName.of('AA'), pdfDoc.context.obj(aaDict));
         }
       }
     }
+  }
+
+  // Embed document-level JavaScript from <Pdf.Script> blocks.
+  // Each script runs when the PDF opens; `this` is the document object,
+  // giving full access to all fields via this.getField("name").
+  if (scripts.length > 0) {
+    const combined = scripts.join('\n\n');
+    const jsDict = pdfDoc.context.obj({
+      S: PDFName.of('JavaScript'),
+      JS: PDFString.of(combined),
+    });
+    const openAction = pdfDoc.context.obj({
+      Type: PDFName.of('Action'),
+      S: PDFName.of('JavaScript'),
+      JS: PDFString.of(combined),
+    });
+    pdfDoc.catalog.set(PDFName.of('OpenAction'), openAction);
+    // Also register in the Names tree so the script is a named JS action
+    const namesDict = pdfDoc.context.obj({
+      JavaScript: pdfDoc.context.obj({
+        Names: pdfDoc.context.obj([PDFString.of('PdfFormScript'), jsDict]),
+      }),
+    });
+    pdfDoc.catalog.set(PDFName.of('Names'), namesDict);
   }
 
   // Remove AP streams so viewers use DA font size when field is active

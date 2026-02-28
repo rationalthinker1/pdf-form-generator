@@ -65,4 +65,5 @@ export interface ExtractedBox {
 
 export interface ExtractedData {
   pages: ExtractedPage[]
+  scripts: string[]
 }

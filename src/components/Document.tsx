@@ -95,7 +95,10 @@ export function Document({ children }: DocumentProps) {
         return { ...dims, fields, texts, boxes };
       });
 
-      return { pages };
+      const scripts = Array.from(rootEl.querySelectorAll<HTMLElement>('[data-pdf-script]'))
+        .map(el => el.textContent ?? '');
+
+      return { pages, scripts };
     };
 
     window.__ready = true;

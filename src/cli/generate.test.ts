@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll } from 'bun:test';
 import { generatePdf } from './generate';
 import { PDFDocument, PDFName } from 'pdf-lib';
-import type { ExtractedPage } from '../../index';
+import type { ExtractedData, ExtractedPage } from '../../index';
 
 let basePdf: Uint8Array;
 
@@ -21,6 +21,10 @@ function makePage(fields: ExtractedPage['fields'] = []): ExtractedPage {
   };
 }
 
+function makeData(pages: ExtractedPage[], scripts: string[] = []): ExtractedData {
+  return { pages, scripts };
+}
+
 describe('generatePdf', () => {
   it('produces a valid PDF binary', async () => {
     const pages = [
@@ -35,7 +39,7 @@ describe('generatePdf', () => {
       ]),
     ];
 
-    const result = await generatePdf(basePdf, pages);
+    const result = await generatePdf(basePdf, makeData(pages));
     expect(result).toBeInstanceOf(Uint8Array);
 
     const doc = await PDFDocument.load(result);
@@ -59,7 +63,7 @@ describe('generatePdf', () => {
       ]),
     ];
 
-    const result = await generatePdf(basePdf, pages);
+    const result = await generatePdf(basePdf, makeData(pages));
     const doc = await PDFDocument.load(result);
     const field = doc.getForm().getTextField('lastName');
     expect(field.getText() ?? '').toBe('');
@@ -77,7 +81,7 @@ describe('generatePdf', () => {
       makePage(),
     ];
 
-    const result = await generatePdf(twoPagePdf, pages);
+    const result = await generatePdf(twoPagePdf, makeData(pages));
     const loaded = await PDFDocument.load(result);
     expect(loaded.getPageCount()).toBe(2);
   });
@@ -95,7 +99,7 @@ describe('generatePdf', () => {
       ]),
     ];
 
-    const result = await generatePdf(basePdf, pages);
+    const result = await generatePdf(basePdf, makeData(pages));
     const doc = await PDFDocument.load(result);
     const form = doc.getForm();
     const field = form.getTextField('dob');
@@ -118,7 +122,7 @@ describe('generatePdf', () => {
       ]),
     ];
 
-    const result = await generatePdf(basePdf, pages);
+    const result = await generatePdf(basePdf, makeData(pages));
     const doc = await PDFDocument.load(result);
     const form = doc.getForm();
     expect(form.getFields()).toHaveLength(0);

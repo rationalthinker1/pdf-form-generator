@@ -14,7 +14,7 @@ export function Text({ className, style, children }: TextProps) {
     if (!el) return;
     const cs = getComputedStyle(el);
     const fontSizePx = parseFloat(cs.fontSize);
-    el.dataset.pdfFontSize = String(Math.round(fontSizePx * 72 / 96));
+  el.dataset.pdfFontSize = String(Math.round(fontSizePx * 72 / 96));
     el.dataset.pdfBold = cs.fontWeight >= '600' ? 'true' : 'false';
     el.dataset.pdfColor = cs.color;
   });

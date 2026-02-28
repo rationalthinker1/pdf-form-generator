@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { Pdf, InputField } from '../../index';
+import { PdfPreview } from '../../components/PdfPreview';
 
 // Page 2 of the CHP contract (450pt × 792pt = 600px × 1056px in the original).
 // Using letter size here (816px × 1056px); all fields fall within the first 600px.
@@ -100,9 +101,9 @@ export default function CHPContractPage2() {
               <InputField {...register('customer_signature')} name="p2.customer_signature" label="Customer Signature" type="text" defaultValue={v.customer_signature} />
             </div>
             <div className={row}>
-              <InputField {...register('customer_full_name')} name="p2.customer_full_name" label="Print Name" type="text" defaultValue={v.customer_full_name} />
+              <InputField {...register('customer_full_name')} name="p2.customer_full_name" label="Name" type="text" defaultValue={v.customer_full_name} />
               <InputField {...register('customer_date_of_signature')} name="p2.customer_date_of_signature" label="Date" type="date" defaultValue={v.customer_date_of_signature} />
-              <InputField {...register('cocustomer_full_name')} name="p2.cocustomer_full_name" label="Co-Customer Print Name" type="text" defaultValue={v.cocustomer_full_name} />
+              <InputField {...register('cocustomer_full_name')} name="p2.cocustomer_full_name" label="Co-Customer Name" type="text" defaultValue={v.cocustomer_full_name} />
               <InputField {...register('cocustomer_date_of_signature')} name="p2.cocustomer_date_of_signature" label="Date" type="date" defaultValue={v.cocustomer_date_of_signature} />
             </div>
             <div className={row}>
@@ -120,7 +121,15 @@ export default function CHPContractPage2() {
           </Pdf.Box>
 
         </Pdf.Page>
+
+        <Pdf.Script>{`
+var prov = this.getField("p2.province");
+if (prov) {
+  prov.setAction("Keystroke", "event.change = event.change.toUpperCase(); if (event.value.length + event.change.length > 2) event.rc = false;");
+}
+        `}</Pdf.Script>
       </Pdf.Document>
+      <PdfPreview />
     </form>
   );
 }

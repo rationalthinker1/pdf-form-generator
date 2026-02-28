@@ -10,6 +10,9 @@ export async function measureForm(
     args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-setuid-sandbox'],
   });
   const page = await browser.newPage();
+  // Match the letter page width (816px) plus Document padding (p-8 = 32px each side)
+  await page.setViewportSize({ width: 880, height: 1056 });
+  await page.emulateMedia({ media: 'print' });
 
   page.on('console', msg => {
     if (msg.type() === 'error') console.log(`  [browser] ${msg.text()}`)
@@ -35,6 +38,10 @@ export async function measureForm(
       { timeout: 60_000 }
     );
     console.log('  React mounted (window.__ready = true)')
+
+    // Wait for fonts (e.g. Inter from Google Fonts) to finish loading
+    await page.evaluate(() => document.fonts.ready);
+    console.log('  Fonts ready')
 
     const data = await page.evaluate(() => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
