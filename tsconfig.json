@@ -1,23 +1,7 @@
 {
-  "extends": "./tsconfig.base.json",
-  "compilerOptions": {
-    "noEmit": true,
-    "paths": {
-      "@pdf-form/core": [
-        "./packages/core/src/index.ts"
-      ],
-      "@pdf-form/core/*": [
-        "./packages/core/src/*"
-      ]
-    }
-  },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules",
-    "packages/*/dist",
-    "examples/*/dist"
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
   ]
 }

@@ -1,7 +1,0 @@
-{
-  "name": "hvac-contract-example",
-  "private": true,
-  "dependencies": {
-    "@pdf-form/core": "workspace:*"
-  }
-}

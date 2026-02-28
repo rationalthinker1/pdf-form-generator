@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'bun:test';
 import { generatePdf } from './generate';
 import { PDFDocument } from 'pdf-lib';
-import type { ExtractedPage } from '@pdf-form/core';
+import type { ExtractedPage } from '../../index';
 import { inflateSync } from 'node:zlib';
 
 describe('generatePdf', () => {

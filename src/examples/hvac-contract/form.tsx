@@ -1,4 +1,4 @@
-import { Pdf } from '@pdf-form/core';
+import { Pdf } from '../../index';
 
 export default function HvacContract() {
   return (

@@ -1,7 +1,0 @@
-{
-  "name": "chp-contract-example",
-  "private": true,
-  "dependencies": {
-    "@pdf-form/core": "workspace:*"
-  }
-}

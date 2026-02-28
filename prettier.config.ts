@@ -1,4 +1,4 @@
-import type { Config } from 'prettier';
+import type { Config } from 'prettier'
 
 const config: Config = {
   semi: false,
@@ -6,6 +6,6 @@ const config: Config = {
   trailingComma: 'all',
   printWidth: 100,
   plugins: ['prettier-plugin-tailwindcss'],
-};
+}
 
-export default config;
+export default config

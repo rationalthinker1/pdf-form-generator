@@ -1,4 +1,4 @@
-import type { PageDimensions } from '@pdf-form/core';
+import type { PageDimensions } from '../../index';
 
 const SCALE = 72 / 96; // 1px = 0.75pt
 

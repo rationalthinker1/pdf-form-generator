@@ -1,5 +1,5 @@
 import { chromium } from 'playwright';
-import type { ExtractedData } from '@pdf-form/core';
+import type { ExtractedData } from '../../index';
 
 export async function measureForm(
   url: string,

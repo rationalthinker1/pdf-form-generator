@@ -1,6 +1,6 @@
 import { PDFDocument, PDFString, PDFName, StandardFonts, rgb } from 'pdf-lib';
 import { convertToPdfCoords } from './convert';
-import type { ExtractedPage } from '@pdf-form/core';
+import type { ExtractedPage } from '../../index';
 
 function hexToRgb(hex: string) {
   const r = parseInt(hex.slice(1, 3), 16) / 255;

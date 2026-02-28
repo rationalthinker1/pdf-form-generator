@@ -1,32 +1,26 @@
-import tseslint from '@typescript-eslint/eslint-plugin';
-import tsparser from '@typescript-eslint/parser';
-import react from 'eslint-plugin-react';
-import reactHooks from 'eslint-plugin-react-hooks';
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import tseslint from 'typescript-eslint'
+import { defineConfig, globalIgnores } from 'eslint/config'
 
-export default [
-  {
-    ignores: ['**/dist/**'],
-  },
+export default defineConfig([
+  globalIgnores(['dist']),
   {
     files: ['**/*.{ts,tsx}'],
-    plugins: {
-      '@typescript-eslint': tseslint,
-      react,
-      'react-hooks': reactHooks,
-    },
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.recommended,
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
+    ],
     languageOptions: {
-      parser: tsparser,
-      parserOptions: { ecmaFeatures: { jsx: true } },
-    },
-    settings: {
-      react: { version: '18' },
+      ecmaVersion: 2020,
+      globals: globals.browser,
     },
     rules: {
-      ...tseslint.configs.recommended.rules,
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn',
-      'quotes': ['error', 'single', { avoidEscape: true }],
-      'semi': ['error', 'always'],
+      'react-hooks/incompatible-library': 'off',
     },
   },
-];
+])
