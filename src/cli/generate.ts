@@ -28,15 +28,14 @@ export async function generatePdf(
 
       if (field.type === 'text' || field.type === 'textarea') {
         const tf = form.createTextField(field.name);
-        tf.acroField.dict.set(PDFName.of('V'), PDFString.of(value));
+        // Always leave the AcroForm field empty so the viewer doesn't render
+        // its own auto-sized text over our static drawn value.
+        tf.acroField.dict.set(PDFName.of('V'), PDFString.of(''));
         if (field.type === 'textarea') tf.enableMultiline();
         tf.addToPage(page, { ...coords, font: helvetica });
-        // Draw pre-filled value as static page content so it renders at the correct
-        // size regardless of how the PDF viewer handles AcroForm appearance streams.
+        // Draw pre-filled value as static page content at a fixed 10pt size.
         if (value) {
           const FONT_SIZE = 10;
-          // coords.y = bottom of field in PDF pts (origin bottom-left)
-          // drawText y = baseline position; center baseline in the field height
           const ascent = helvetica.heightAtSize(FONT_SIZE);
           const textY = coords.y + (coords.height - ascent) / 2;
           page.drawText(value, {
