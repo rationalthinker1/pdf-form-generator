@@ -14,7 +14,7 @@ export function Page({ size = 'letter', children, footer }: PageProps) {
   return (
     <div
       data-pdf-page={size}
-      className="page relative bg-white shadow-lg grid"
+      className="page relative bg-white shadow-lg grid overflow-hidden print:shadow-none print:mx-0 print:my-0"
       style={{
         width: dims.widthPx,
         height: dims.heightPx,

@@ -105,7 +105,7 @@ export function Document({ children }: DocumentProps) {
   }, []);
 
   return (
-    <div ref={ref} className="flex flex-col items-center gap-8 bg-gray-100 p-8">
+    <div ref={ref} className="flex flex-col items-center gap-8 bg-gray-100 p-8 print:gap-0 print:p-0 print:bg-transparent">
       {children}
     </div>
   );
