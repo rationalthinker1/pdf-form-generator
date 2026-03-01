@@ -9,7 +9,7 @@ interface TextFieldProps {
   type?: FieldType
 }
 
-const baseClass = 'h-9 bg-blue-50 px-2 py-1 text-sm text-gray-800'
+const baseClass = 'relative h-9 bg-blue-50 px-2 py-1 text-sm text-gray-800'
 
 export function TextField({ name, label, defaultValue, className, style, type = 'text' }: TextFieldProps) {
   return (
@@ -20,9 +20,10 @@ export function TextField({ name, label, defaultValue, className, style, type = 
       className={[baseClass, className].filter(Boolean).join(' ')}
       style={style}
     >
-      {!defaultValue && (
-        <span className="text-gray-400 italic print:hidden">{label ?? name}</span>
-      )}
+      {defaultValue
+        ? <span>{defaultValue}</span>
+        : <span className="text-gray-400 italic">{label ?? name}</span>
+      }
     </div>
   )
 }

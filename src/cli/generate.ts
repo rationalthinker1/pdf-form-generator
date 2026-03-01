@@ -26,11 +26,12 @@ export async function generatePdf(
       if (field.type === 'text' || field.type === 'textarea' || field.type === 'date') {
         const tf = form.createTextField(field.name);
         if (field.type === 'textarea') tf.enableMultiline();
-        const PAD_LEFT = 4;
+        const PAD_LEFT = 2;
+        const PAD_RIGHT = 2;
         tf.addToPage(page, {
           x: field.xPt + PAD_LEFT,
           y: yPt,
-          width: field.widthPt - PAD_LEFT,
+          width: field.widthPt - PAD_LEFT - PAD_RIGHT,
           height: field.heightPt,
           font: helvetica,
           backgroundColor: undefined,
