@@ -10,7 +10,13 @@ export default function CHPContractPage2() {
     <Pdf.Document>
 
       {/* ── PAGE 0: IMPORTANT — LEGAL RIGHTS COVER PAGE ──────────────── */}
-      <Pdf.Page size="letter">
+      <Pdf.Page size="letter" footer={
+        <Pdf.Footer>
+          <span className="text-[9px] text-gray-500">Canada Home Protect</span>
+          <span className="text-[9px] text-gray-500">1/5</span>
+          <span className="text-[9px] text-gray-500">PG1/5</span>
+        </Pdf.Footer>
+      }>
         <div className="text-[11px] text-gray-900 leading-snug font-sans border border-gray-400">
 
           {/* Header */}
@@ -88,14 +94,14 @@ export default function CHPContractPage2() {
             <div className="flex flex-row items-end gap-1 mb-1">
               <span className="whitespace-nowrap shrink-0">Name of company offering this contract:</span>
               <div className="relative flex-1 border-b border-gray-800">
-                <Pdf.TextField name="p0.company_name" type="text" defaultValue="Canada Home Protect"
+                <Pdf.TextField name="p0.company_name" type="text"
                   className="absolute inset-0 bg-transparent border-none text-right text-[11px] h-5 px-0" />
               </div>
             </div>
             {/* Purpose: label on its own line, then underline with centered text */}
             <p className="mb-0.5">For what purpose did you ask this business to come to your home?</p>
             <div className="relative border-b border-gray-800 mb-0">
-              <Pdf.TextField name="p0.purpose" type="text" defaultValue="home maintenance &amp; service program"
+              <Pdf.TextField name="p0.purpose" type="text"
                 className="w-full bg-transparent border-none text-center text-[11px] h-5 px-0" />
             </div>
           </div>
@@ -166,17 +172,17 @@ export default function CHPContractPage2() {
 
         </div>
 
-        <Pdf.Footer>
-          <span className="text-[9px] text-gray-500">Canada Home Protect</span>
-          <span className="text-[9px] text-gray-500">1/5</span>
-          <span className="text-[9px] text-gray-500">PG1/5</span>
-        </Pdf.Footer>
-
       </Pdf.Page>
 
       {/* ── PAGE 1: CONSUMER PROTECTION ACT ─────────────────────────── */}
-      <Pdf.Page size="letter">
-        <div className="flex-1 px-3 pt-3 text-[11px] text-gray-900 font-sans overflow-hidden">
+      <Pdf.Page size="letter" footer={
+        <Pdf.Footer>
+          <span className="text-[9px] text-gray-500">Canada Home Protect</span>
+          <span className="text-[9px] text-gray-500">2/5</span>
+          <span className="text-[9px] text-gray-500">PG2/5</span>
+        </Pdf.Footer>
+      }>
+        <div className="px-3 pt-3 text-[11px] text-gray-900 font-sans">
 
           {/* Title — T1_0 bold 12pt */}
           <p className="font-bold text-[12px] mb-4">Your Rights under the Consumer Protection Act, 2002</p>
@@ -275,12 +281,6 @@ export default function CHPContractPage2() {
           <p className="mb-0 leading-tight">4789 Yonge Street, Suite 805</p>
           <p className="mb-0 leading-tight">Toronto ON M2NOG3</p>
           <p className="mb-0 leading-tight">Email: admin@canadahomeprotect.ca</p>
-
-          <Pdf.Footer>
-            <span className="text-[9px] text-gray-500">Canada Home Protect</span>
-            <span className="text-[9px] text-gray-500">2/5</span>
-            <span className="text-[9px] text-gray-500">PG2/5</span>
-          </Pdf.Footer>
 
         </div>
       </Pdf.Page>
@@ -493,7 +493,13 @@ if (prov) {
       `}</Pdf.Script>
 
       {/* ── PAGE 3: GENERAL TERMS AND CONDITIONS ─────────────────────── */}
-      <Pdf.Page size="letter">
+      <Pdf.Page size="letter" footer={
+        <Pdf.Footer>
+          <span className="text-[8px] text-gray-500">Canada Home Protect</span>
+          <span className="text-[8px] text-gray-500">4/5</span>
+          <span className="text-[8px] text-gray-500">PG4/5</span>
+        </Pdf.Footer>
+      }>
         <div className="px-8 py-6 text-[7.5px] text-gray-900 leading-snug font-sans flex flex-col gap-0">
 
           <div className="flex flex-row gap-6">
@@ -562,12 +568,6 @@ if (prov) {
                 <p>32. The OWNER agrees that, if a social insurance number ("SIN") is provided to PFG, the SIN may be used for credit history file matching and other administrative purposes. The OWNER specifically consents to the continued disclosure of personal information to credit reporting agencies to update their records after the termination of this Lease Agreement.</p>
               </section>
 
-              <Pdf.Footer>
-                <span className="text-[8px] text-gray-500">Canada Home Protect</span>
-                <span className="text-[8px] text-gray-500">4/5</span>
-                <span className="text-[8px] text-gray-500">PG4/5</span>
-              </Pdf.Footer>
-
             </div>
           </div>
 
@@ -575,7 +575,13 @@ if (prov) {
       </Pdf.Page>
 
       {/* ── PAGE 4: OWNER CERTIFICATION + SIGNATURE ──────────────────── */}
-      <Pdf.Page size="letter">
+      <Pdf.Page size="letter" footer={
+        <Pdf.Footer>
+          <span className="text-[8px] text-gray-500">Canada Home Protect</span>
+          <span className="text-[8px] text-gray-500">5/5</span>
+          <span className="text-[8px] text-gray-500">PG5/5</span>
+        </Pdf.Footer>
+      }>
         <div className="px-8 py-6 text-[7.5px] text-gray-900 leading-snug font-sans">
 
           <div className="flex flex-row gap-6">
@@ -635,12 +641,6 @@ if (prov) {
 
             </div>
           </div>
-
-          <Pdf.Footer>
-            <span className="text-[8px] text-gray-500">Canada Home Protect</span>
-            <span className="text-[8px] text-gray-500">5/5</span>
-            <span className="text-[8px] text-gray-500">PG5/5</span>
-          </Pdf.Footer>
 
         </div>
       </Pdf.Page>

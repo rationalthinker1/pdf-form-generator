@@ -20,4 +20,12 @@ describe('Page', () => {
     );
     expect(html).toContain('id="child"');
   });
+
+  it('renders footer prop in a separate grid row', () => {
+    const html = renderToStaticMarkup(
+      createElement(Page, { footer: createElement('span', { id: 'ft' }) })
+    );
+    expect(html).toContain('id="ft"');
+    expect(html).toContain('grid');
+  });
 });

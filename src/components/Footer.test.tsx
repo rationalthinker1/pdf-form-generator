@@ -11,11 +11,11 @@ describe('Footer', () => {
     expect(html).toContain('Canada Home Protect');
   });
 
-  it('is pushed to the bottom of the page via mt-auto', () => {
+  it('renders a bordered row', () => {
     const html = renderToStaticMarkup(
       createElement(Footer, null, '2/5')
     );
-    expect(html).toContain('mt-auto');
+    expect(html).toContain('border-t');
   });
 
   it('renders multiple children in a row', () => {

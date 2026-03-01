@@ -5,22 +5,25 @@ import type { PageSize } from '../types';
 interface PageProps {
   size?: PageSize
   children?: ReactNode
+  footer?: ReactNode
 }
 
-export function Page({ size = 'letter', children }: PageProps) {
+export function Page({ size = 'letter', children, footer }: PageProps) {
   const dims = PAGE_SIZES[size];
 
   return (
     <div
       data-pdf-page={size}
-      className="page relative bg-white shadow-lg flex flex-col  px-10 pt-12"
+      className="page relative bg-white shadow-lg grid"
       style={{
         width: dims.widthPx,
         height: dims.heightPx,
         flexShrink: 0,
+        gridTemplateRows: footer ? '1fr auto' : '1fr',
       }}
     >
-      {children}
+      <div className="min-h-0 overflow-hidden px-10 pt-12">{children}</div>
+      {footer}
     </div>
   );
 }
