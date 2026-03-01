@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { FieldType } from '../types'
 import { Pdf } from '..'
 
-const labelClass = 'text-xs ml-1 font-semibold uppercase tracking-wide text-gray-700'
+const labelClass = 'text-xs ml-1 font-semibold uppercase text-gray-700'
 const textClass = 'h-9 bg-blue-50 px-2 py-1 text-sm text-gray-800'
 
 interface InputFieldProps {

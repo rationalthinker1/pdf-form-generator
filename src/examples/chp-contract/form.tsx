@@ -1,3 +1,4 @@
+import { TextField } from '../../components';
 import { Pdf, InputField } from '../../index';
 
 const navy = 'bg-[#1e3a5f] text-white font-bold uppercase'
@@ -350,7 +351,7 @@ export default function CHPContractPage2() {
         {/* ── HOMEOWNER INFORMATION HEADER ─────────────────────────────── */}
         <div className={`flex flex-row justify-between items-center px-2 py-0.5 ${navy}`}>
           <span className="text-xs tracking-wide">Homeowner Information</span>
-          <span className="text-[10px] font-semibold tracking-widest">Print Neatly in Capital Letters</span>
+          <span className="text-[10px] font-semibold tracking-normal">Print Neatly in Capital Letters</span>
         </div>
 
         {/* ── HOMEOWNER INFO TABLE ──────────────────────────────────────── */}
@@ -410,24 +411,25 @@ export default function CHPContractPage2() {
               <InputField name="p2.province" label="Province" type="text"
                 labelClassName="text-[9px]" textClassName="bg-white h-6" />
             </div>
-            <div className="flex-2">
-              <InputField name="p2.email" label="Email Address (Required for Rebate Confirmation)" type="text"
+            <div className={`${cell} flex-[0.375] `}>
+              <InputField name="p2.postal_code" label="Postal Code" type="text"
                 labelClassName="text-[9px]" textClassName="bg-white h-6" />
             </div>
           </div>
 
           {/* Row 5: Postal Code | Home Phone | Mobile or Office */}
           <div className={`${tableRow} border-b-0`}>
-            <div className={cell}>
-              <InputField name="p2.postal_code" label="Postal Code" type="text"
+          <div className={cell}>
+              <InputField name="p2.email" label="Email" type="text"
                 labelClassName="text-[9px]" textClassName="bg-white h-6" />
             </div>
+           
             <div className={cell}>
               <InputField name="p2.home_phone" label="Home Phone" type="text"
                 labelClassName="text-[9px]" textClassName="bg-white h-6" />
             </div>
-            <div className="">
-              <InputField name="p2.mobile_or_office" label="Mobile or Office" type="text"
+            <div className={cell}>
+              <InputField name="p2.mobile_or_office" label="Cell Phone" type="text"
                 labelClassName="text-[9px]" textClassName="bg-white h-6" />
             </div>
           </div>
@@ -464,7 +466,7 @@ export default function CHPContractPage2() {
           {/* Empty plan rows */}
           {[...Array(6)].map((_, i) => (
             <div key={i} className={tableRow} style={{ height: 22 }}>
-              <div className="flex-[3] border-r border-gray-400" />
+              <div className="flex-3 border-r border-gray-400" />
               <div className="w-28 border-r border-gray-400" />
               <div className="w-20 border-r border-gray-400" />
               <div className="w-24" />
@@ -473,18 +475,16 @@ export default function CHPContractPage2() {
 
           {/* Footer: note + Start Date */}
           <div className={`${tableRow} border-b-0`}>
-            <div className="flex-1 border-r border-gray-400 px-2 py-0.5 text-[9px] text-gray-800 flex items-center">
+            <div className="w-[34.9rem] border-r border-gray-400 px-2 py-0.5 text-[9px] text-gray-800 flex items-center">
               *Please check all that apply. See details of each plan in HMP Terms and Conditions.
             </div>
-            <div className="w-52 flex flex-row h-6">
-              <div className={`flex items-center justify-center px-3 text-[8px] font-bold ${navy}`} style={{ width: 80 }}>
+            <div className={`w-20 flex items-center justify-center px-3 text-[8px] font-bold ${navy}`} style={{ width: 80 }}>
                 Start Date
               </div>
-              <div className="flex-1">
-                <InputField name="p2.start_date" label="" type="date"
-                  labelClassName="hidden" textClassName="bg-white h-full" />
+            <div className="flex-1">
+            <Pdf.TextField type="text" name="p2.start_date"
+                   className=" h-full w-full" />
               </div>
-            </div>
           </div>
 
         </div>
