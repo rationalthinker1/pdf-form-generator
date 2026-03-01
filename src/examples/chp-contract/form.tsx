@@ -164,29 +164,32 @@ export default function CHPContractPage2() {
             </div>
           </div>
 
-          {/* Page footer */}
-          <div className="flex flex-row justify-between px-3 py-1 border-t border-gray-300">
-            <span className="text-[9px] text-gray-500">Canada Home Protect</span>
-            <span className="text-[9px] text-gray-500">1/5</span>
-            <span className="text-[9px] text-gray-500">PG1/5</span>
-          </div>
-
         </div>
+
+        <Pdf.Footer>
+          <span className="text-[9px] text-gray-500">Canada Home Protect</span>
+          <span className="text-[9px] text-gray-500">1/5</span>
+          <span className="text-[9px] text-gray-500">PG1/5</span>
+        </Pdf.Footer>
+
       </Pdf.Page>
 
       {/* ── PAGE 1: CONSUMER PROTECTION ACT ─────────────────────────── */}
       <Pdf.Page size="letter">
-        <div className="px-12 py-2 text-[12.5px] text-gray-900 leading-snug font-sans">
+        <div className="flex-1 px-3 pt-3 text-[11px] text-gray-900 font-sans overflow-hidden">
 
-          <p className="font-bold text-sm mb-3">Your Rights under the Consumer Protection Act, 2002</p>
+          {/* Title — T1_0 bold 12pt */}
+          <p className="font-bold text-[12px] mb-4">Your Rights under the Consumer Protection Act, 2002</p>
 
-          <p className="mb-3 text-justify">
+          {/* Paragraph 1 — T1_0 bold 10pt, justified */}
+          <p className="font-bold text-[10px] mb-3 text-justify leading-normal">
             You may cancel this Agreement at any time during the period that ends ten (10) days after the day
             you receive a written copy of the Agreement. You do not need to give the supplier a reason for
             cancelling during this 10-day period.
           </p>
 
-          <p className="mb-3 text-justify font-bold">
+          {/* Paragraph 2 — T1_0 bold 10pt, justified */}
+          <p className="font-bold text-[10px] mb-3 text-justify leading-normal">
             If the supplier does not make delivery within 30 days after the delivery date specified in this
             agreement or if the supplier does not begin performance of his, her or its obligations within 30 days
             after the commencement date specified in this Agreement, you may cancel this Agreement at any
@@ -200,7 +203,8 @@ export default function CHPContractPage2() {
             allow you to cancel this Agreement. You may also have other rights, duties and remedies at law.
           </p>
 
-          <p className="mb-3 text-justify">
+          {/* Remaining paragraphs — T1_1 regular 11pt, justified */}
+          <p className="mb-3 text-justify leading-normal">
             For more information, you may contact the Ministry of Government and Consumer Services. To
             cancel this Agreement, you must give notice of cancellation to the supplier, at the address set out
             in the Agreement, by any means that allows you to prove the date on which you gave notice. If
@@ -208,7 +212,7 @@ export default function CHPContractPage2() {
             Government of Ontario or the Government of Canada or is known by you.
           </p>
 
-          <p className="mb-3 text-justify">
+          <p className="mb-3 text-justify leading-normal">
             If you cancel this Agreement, the supplier has fifteen (15) days to refund any payment you have
             made and return to you all goods delivered under a trade-in arrangement (or refund an amount
             equal to the trade-in allowance). However, if you cancel this Agreement after having solicited the
@@ -220,40 +224,63 @@ export default function CHPContractPage2() {
             to the supplier.
           </p>
 
-          <p className="mb-3 text-justify">
+          <p className="mb-3 text-justify leading-normal">
             If the supplier requests in writing repossession of any goods that came into your possession
-            under the Agreement, you must return the goods to the supplier's address, or allow one of the
+            under the Agreement, you must return the goods to the supplier&#8217;s address, or allow one of the
             following persons to repossess the goods at your address:
           </p>
 
-          <p className="mb-1">a) The supplier.</p>
-          <p className="mb-3">b) A person designated in writing by the supplier.</p>
+          {/* List with hanging indent — matches PDF kerning style */}
+          <div className="mb-3 pl-1">
+            <div className="flex mb-1">
+              <span className="w-6 shrink-0">a)</span>
+              <span>The supplier.</span>
+            </div>
+            <div className="flex">
+              <span className="w-6 shrink-0">b)</span>
+              <span>A person designated in writing by the supplier.</span>
+            </div>
+          </div>
 
-          <p className="mb-3 text-justify">
+          <p className="mb-3 text-justify leading-normal">
             If you cancel this Agreement, you must take reasonable care of any goods that came into your
             possession under the Agreement until one of the following happens:
           </p>
-          <p className="mb-1">a) The supplier repossesses the goods.</p>
-          <p className="mb-1">b) The supplier has been given a reasonable opportunity to repossess the goods and twenty-one
-            (21) days have passed since the Agreement was cancelled.</p>
-          <p className="mb-1">c) You return the goods.</p>
-          <p className="mb-3">d) The supplier directs you in writing to destroy the goods and you do so in accordance with the
-            supplier's instructions.</p>
 
-          <p className="mb-3">For more information contact:</p>
-
-          <p className="mb-0">Canada Home Protect</p>
-          <p className="mb-0">Toll Free: 1-833-347-0209</p>
-          <p className="mb-0">4789 Yonge Street, Suite 805</p>
-          <p className="mb-0">Toronto ON M2NOG3</p>
-          <p className="mb-0">Email: admin@canadahomeprotect.ca</p>
-
-          {/* Footer */}
-          <div className="absolute bottom-6 left-12 right-12 flex flex-row justify-between border-t border-gray-300 pt-1 mt-4">
-            <span className="text-[10px] text-gray-500">Canada Home Protect</span>
-            <span className="text-[10px] text-gray-500">2/5</span>
-            <span className="text-[10px] text-gray-500">PG2/5</span>
+          <div className="mb-3 pl-1">
+            <div className="flex mb-1">
+              <span className="w-6 shrink-0">a)</span>
+              <span>The supplier repossesses the goods.</span>
+            </div>
+            <div className="flex mb-1">
+              <span className="w-6 shrink-0">b)</span>
+              <span>The supplier has been given a reasonable opportunity to repossess the goods and twenty-one
+                (21) days have passed since the Agreement was cancelled.</span>
+            </div>
+            <div className="flex mb-1">
+              <span className="w-6 shrink-0">c)</span>
+              <span>You return the goods.</span>
+            </div>
+            <div className="flex">
+              <span className="w-6 shrink-0">d)</span>
+              <span>The supplier directs you in writing to destroy the goods and you do so in accordance with the
+                supplier&#8217;s instructions.</span>
+            </div>
           </div>
+
+          {/* Contact block — near bottom of page */}
+          <p className="mb-1 leading-normal">For more information contact:</p>
+          <p className="mb-0 leading-tight">Canada Home Protect</p>
+          <p className="mb-0 leading-tight">Toll Free: 1-833-347-0209</p>
+          <p className="mb-0 leading-tight">4789 Yonge Street, Suite 805</p>
+          <p className="mb-0 leading-tight">Toronto ON M2NOG3</p>
+          <p className="mb-0 leading-tight">Email: admin@canadahomeprotect.ca</p>
+
+          <Pdf.Footer>
+            <span className="text-[9px] text-gray-500">Canada Home Protect</span>
+            <span className="text-[9px] text-gray-500">2/5</span>
+            <span className="text-[9px] text-gray-500">PG2/5</span>
+          </Pdf.Footer>
 
         </div>
       </Pdf.Page>
@@ -464,6 +491,160 @@ if (prov) {
   prov.setAction("Keystroke", "event.change = event.change.toUpperCase(); if (event.value.length + event.change.length > 2) event.rc = false;");
 }
       `}</Pdf.Script>
+
+      {/* ── PAGE 3: GENERAL TERMS AND CONDITIONS ─────────────────────── */}
+      <Pdf.Page size="letter">
+        <div className="px-8 py-6 text-[7.5px] text-gray-900 leading-snug font-sans flex flex-col gap-0">
+
+          <div className="flex flex-row gap-6">
+            {/* Left column */}
+            <div className="flex-1 flex flex-col gap-2">
+
+              <section>
+                <p className="font-bold mb-1">GENERAL TERMS AND CONDITIONS</p>
+                <p className="mb-1">1. This Lease Agreement, including these Terms and Conditions and the mandatory disclosures attached (collectively, the "Lease Agreement") represents the entire agreement between PFG and the OWNER and can only be amended or altered in writing signed by the OWNER. The commencement date of the Lease Agreement is the date it is signed (the "Commencement Date"). If not defined in these Terms and Conditions, capitalized words have the meaning given to them in this Lease Agreement including all schedules, addenda and mandatory disclosures, and all references to PFG include PFG's agents, employees and representatives.</p>
+                <p>2. The OWNER agrees not to assign, transfer, sublet, mortgage, pledge, or otherwise encumber or dispose of the Equipment or this Lease Agreement, or any rights thereunder, without the prior written consent of PFG. Subject to the foregoing, this Agreement shall enure to the benefit of and be binding upon the respective successors, heirs, executors, administrators and permitted assigns of the parties. The OWNER agrees to pay all amounts owing by it to PFG under this Lease Agreement. The attachment of the security interest has not been postponed and the OWNER agrees that PFG may file, at the OWNER's expense, a security interest, other interest, and/or notice on title at PFG's discretion, including registering any such registrations. The OWNER agrees that the Equipment shall at all times remain the personal property of PFG.</p>
+              </section>
+
+              <section>
+                <p className="font-bold mb-1">OWNER RESPONSIBILITIES</p>
+                <p className="mb-1">4. The OWNER agrees to safely operate and maintain the Equipment in a clean condition, and to ensure that PFG's name and sticker labeling is not removed from the Equipment. The OWNER agrees to permit PFG and its representatives to enter the Property at all reasonable times for the purposes of inspecting, repairing, maintaining, replacing and removing its Equipment.</p>
+                <p className="mb-1">5. The OWNER agrees not to allow any lien, charge, or other encumbrance to be placed on the Equipment and agrees to notify PFG immediately in the event any lien, claim, or other encumbrance is placed on the Equipment. The OWNER agrees to indemnify PFG for any and all costs, damages, and expenses arising from any such lien, including, without limitation, fire, flood, accident and other insured risks.</p>
+                <p className="mb-1">7. The OWNER agrees to keep the Equipment free of all liens, security interests, charges, mortgages, encumbrances and other claims.</p>
+                <p className="mb-1">8. The OWNER agrees not to make any alterations and/or modifications to the equipment without written consent from PFG, subject to this Lease Agreement.</p>
+                <p className="mb-1">9. The Equipment shall remain at the Property at all times. The OWNER shall not remove the Equipment from the premises at which the Equipment is located (the "Property"). If the OWNER sells the Property, the OWNER may either: i) assign the Lease Agreement and all obligations hereunder to the new owner of the Property (the "New Owner") provided that PFG consents to such assignment at the time of sale or transfer of the Property, provided that:</p>
+                <p className="mb-0.5 pl-3">(a) the OWNER's account is current;</p>
+                <p className="mb-0.5 pl-3">(b) the sale of the Property is conditional on the New Owner assuming the obligations under the purchase and sale agreement;</p>
+                <p className="mb-0.5 pl-3">(c) the OWNER has notified PFG of the purchaser's intention to assume the Lease Agreement and all obligations hereunder prior to the property sale a minimum of two (2) weeks before closing;</p>
+                <p className="mb-0.5 pl-3">(d) PFG credit approves the New Owner, acting reasonably; and</p>
+                <p className="mb-1 pl-3">(e) the OWNER has obtained written confirmation from the New Owner that it has agreed to assume the Lease Agreement.</p>
+                <p className="mb-1">PFG may disclose information to the OWNER's real estate lawyer, regarding the account of the OWNER as reasonably necessary to facilitate the sale of the Property.</p>
+                <p className="mb-1">10. The OWNER represents, warrants and covenants to PFG that (a) the OWNER is the registered owner of the Property, (b) this Lease Agreement constitutes the valid and legally binding obligations of the OWNER and is enforceable against the OWNER in accordance with its terms, (c) the OWNER will promptly notify PFG of any change in the OWNER's contact information, and (d) the OWNER will maintain adequate insurance policies relating to the Property.</p>
+                <p>11. In the event the OWNER's tenants (collectively, the "Tenants" and each a "Tenant") are responsible for paying utility bills for the Property, the OWNER authorizes PFG to contact the Tenants on behalf of the OWNER as the identified sender of communication, including the option of sending an email to the Tenant with a link to an application for download by the Tenant. The OWNER acknowledges and agrees that PFG may deal directly with the Tenant without notice or without the requirement of the OWNER's consent in connection with this Lease Agreement and all permitted assigns.</p>
+              </section>
+
+              <section>
+                <p className="mb-1">13. Written communication with PFG should be directed to the following address: 4789 Yonge St. Suite 805, Toronto, ON M2N 0G3. Phone inquiries for billing matters can be made at 1-800-505-3556.</p>
+                <p>14. If the Equipment is replacing equipment leased and/or owned by the OWNER, it is the responsibility of the OWNER to arrange disposal.</p>
+              </section>
+
+              <section>
+                <p className="font-bold mb-1">PAYMENT</p>
+                <p className="mb-1">15. The OWNER agrees to pay the Monthly Rental Payment as set out on page of this Lease Agreement when due. Monthly Rental Payments commence thirty (30) days after the Commencement Date.</p>
+                <p className="mb-1">16. The OWNER acknowledges that in order to facilitate pre-authorized debit ("PAD") payments, PFG shall provide the appropriate information, as reasonably required by PFG's financial institution, to enable PFG to withdraw the applicable Monthly Rental Payment amount on the agreed upon date using PAD. The OWNER acknowledges that any dispute with PFG related to a PAD payment will not affect the OWNER's payment obligations under this Lease Agreement.</p>
+                <p className="mb-1">17. Any future increases or decreases in HST or other applicable taxes will be reflected in the OWNER's monthly payment. Overdue amounts will bear interest at a rate of 24% per annum (2% per month). The OWNER agrees to pay all reasonable administrative charges and costs incurred by PFG for returned items, NSF payments and stop payments, will result in an administration fee. If the OWNER wishes to revise their PAD Agreement, the OWNER must contact our PFG Concierge Service at 1(800)505-3556 in order to process any changes specifying your current Payments.</p>
+                <p>19. The retail value of the product, including all applicable taxes is: (a) subject to any dealer discounts; (b) based on a [X]% annual percentage rate (APR) throughout the Term; and (c) subject to the adjustments set out in Clause 18 above. The total retail value of the Equipment shall be the monthly payment of the Equipment (as indicated on Page 2) multiplied by the number of months in the Term. Equipment may be restricted, as reasonably determined by PFG based on the severity of the wear on the Equipment and/or accessories and peripheral components.</p>
+              </section>
+
+            </div>
+
+            {/* Right column */}
+            <div className="flex-1 flex flex-col gap-2">
+
+              <section>
+                <p className="font-bold mb-1">TERM, TERMINATION, AND PURCHASE</p>
+                <p className="mb-1">20. The Lease Agreement shall commence on the Commencement Date (the "Term"), and automatically renew thereafter on a monthly basis unless terminated by either the OWNER or PFG.</p>
+                <p className="mb-1">22. Following the Term, upon thirty (30) days' written notice, the OWNER may purchase or return the Equipment. During the Term, the purchase price shall equal the current Monthly Rental Payment multiplied by the number of months remaining in the Term (ignoring the value of Equipment).</p>
+                <p>Without limiting its other legal rights, PFG may terminate this Lease Agreement immediately upon written notice to the OWNER in the event that: (a) any information provided by the OWNER to PFG is fraudulent, false or inaccurate, (b) the OWNER has breached any obligation under this Lease Agreement, including without limitation the payment obligations, (c) the OWNER has abandoned the Property, or (d) the OWNER has caused damage to PFG or to PFG, in the event that: (i) the OWNER fails to make the required Monthly Rental Payments under the Lease Agreement, or (ii) PFG or its representative(s) or agent(s) cannot access the Property.</p>
+              </section>
+
+              <section>
+                <p className="font-bold mb-1">LIABILITY</p>
+                <p className="mb-1">24. PFG will not be liable if the Equipment fails to perform due to improper use, even if reasonably foreseeable.</p>
+                <p className="mb-1">25. The OWNER acknowledges that the Equipment, including all related accessories and peripheral components, are subject to normal wear and tear.</p>
+                <p>26. The OWNER agrees to pay all amounts, including all related accessories and peripheral components, this Lease Agreement. The OWNER agrees to pay, when due, all taxes and other charges imposed by any governmental authority in connection with this Lease Agreement.</p>
+              </section>
+
+              <section>
+                <p className="font-bold mb-1">PERSONAL INFORMATION AND CREDIT CHECKS</p>
+                <p className="mb-1">30. The OWNER consents to the creation of a personal information file by PFG containing the OWNER's personal information (e.g. name, date of birth, and contact information) and to the use of such information by PFG for the purpose of this Lease Agreement. The OWNER agrees that PFG may use and disclose the OWNER's personal information in accordance with PFG's privacy policy at http://PartnerFinanceGroup.com/privacy-policy.html.</p>
+                <p className="mb-1">31. The OWNER agrees that PFG may obtain one or more credit reports on the OWNER from a credit reporting agency of PFG's choice, and that PFG may share personal information about the OWNER (e.g. name, date of birth, and contact information) with the credit reporting agency for purposes of verifying the information provided and for ongoing credit history file matching and other administrative purposes. The OWNER consents to the retention of personal information for as long as is needed for the purpose of quality control and administrative purposes. The OWNER may withdraw consent to collection, use or disclosure of personal information in connection with the Lease Agreement provided that such withdrawal of consent may affect PFG's ability to provide services in respect of this Lease Agreement is and will be governed by and construed in accordance with the laws of the province in which the Equipment is installed.</p>
+                <p>32. The OWNER agrees that, if a social insurance number ("SIN") is provided to PFG, the SIN may be used for credit history file matching and other administrative purposes. The OWNER specifically consents to the continued disclosure of personal information to credit reporting agencies to update their records after the termination of this Lease Agreement.</p>
+              </section>
+
+              <Pdf.Footer>
+                <span className="text-[8px] text-gray-500">Canada Home Protect</span>
+                <span className="text-[8px] text-gray-500">4/5</span>
+                <span className="text-[8px] text-gray-500">PG4/5</span>
+              </Pdf.Footer>
+
+            </div>
+          </div>
+
+        </div>
+      </Pdf.Page>
+
+      {/* ── PAGE 4: OWNER CERTIFICATION + SIGNATURE ──────────────────── */}
+      <Pdf.Page size="letter">
+        <div className="px-8 py-6 text-[7.5px] text-gray-900 leading-snug font-sans">
+
+          <div className="flex flex-row gap-6">
+            {/* Left column */}
+            <div className="flex-1 flex flex-col gap-2">
+
+              <p className="mb-1">The party entering into this Lease Agreement (the "OWNER") certifies that all information provided is accurate and complete, and agrees to be bound by the terms and conditions of this Lease Agreement on behalf of itself and its successors, heirs, executors, administrators, and permitted assigns, ("permitted assigns").</p>
+
+              <section>
+                <p className="font-bold mb-1">GENERAL TERMS AND CONDITIONS (continued)</p>
+                <p className="mb-1">1. This Lease Agreement, including these Terms and Conditions and the mandatory disclosures attached (collectively, the "Lease Agreement") represents the entire agreement between PFG and the OWNER and can only be amended or altered in writing signed by the OWNER. The commencement date of the Lease Agreement is the date it is signed (the "Commencement Date"). If not defined in these Terms and Conditions, capitalized words have the meaning given to them by PFG's agents, employees and representatives.</p>
+                <p className="mb-1">2. The OWNER agrees not to assign, transfer, sublet, mortgage, pledge, or otherwise encumber or dispose of the Equipment or this Lease Agreement, or any rights thereunder, without the prior written consent of PFG. Subject to the foregoing, this Agreement shall enure to the benefit of and be binding upon the respective successors, heirs, executors, administrators and permitted assigns of the parties. The OWNER agrees to pay all amounts owing by it to PFG under this Lease Agreement. The attachment of the security interest has not been postponed and the OWNER agrees that PFG may file, at the OWNER's expense, a security interest, other interest, and/or notice on title at PFG's discretion, including registering any such registrations. The OWNER agrees that the Equipment shall at all times remain the personal property of PFG.</p>
+              </section>
+
+            </div>
+
+            {/* Right column */}
+            <div className="flex-1 flex flex-col gap-2">
+
+              <section>
+                <p className="font-bold mb-1">CUSTOMER PAYMENT INFORMATION</p>
+                <p className="mb-2">YOUR CANCELLATION RIGHTS ARE LOCATED ON PAGE 4 OF 5</p>
+
+                {/* Signature rows */}
+                <div className="mb-3">
+                  <p className="mb-1 font-semibold">Signature</p>
+                  <div className="flex flex-row gap-2 mb-1">
+                    <div className="flex-1 border-b border-gray-800 h-4" />
+                    <span>/</span>
+                    <div className="w-16 border-b border-gray-800 h-4" />
+                    <span>/</span>
+                    <div className="w-16 border-b border-gray-800 h-4" />
+                  </div>
+                  <div className="flex flex-row gap-2">
+                    <div className="flex-1 border-b border-gray-800 h-4" />
+                    <span>/</span>
+                    <div className="w-16 border-b border-gray-800 h-4" />
+                    <span>/</span>
+                    <div className="w-16 border-b border-gray-800 h-4" />
+                  </div>
+                </div>
+
+                <div className="border border-gray-400 p-2 mb-2">
+                  <p className="font-bold mb-1">Pre-Authorized Debit</p>
+                  <p className="mb-1">Please Select PAD Date:</p>
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <Pdf.CheckboxField name="p4.pad_date_1" className="w-3 h-3" />
+                    <span>_____ day of the month</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Pdf.CheckboxField name="p4.pad_date_2" className="w-3 h-3" />
+                    <span>_____ day of the month</span>
+                  </div>
+                  <p className="mt-1">PAD), withdrawn from the account described above, and I/we agree to waive any pre-notification requirements under the Canadian Payments Association rules.</p>
+                </div>
+              </section>
+
+            </div>
+          </div>
+
+          <Pdf.Footer>
+            <span className="text-[8px] text-gray-500">Canada Home Protect</span>
+            <span className="text-[8px] text-gray-500">5/5</span>
+            <span className="text-[8px] text-gray-500">PG5/5</span>
+          </Pdf.Footer>
+
+        </div>
+      </Pdf.Page>
+
     </Pdf.Document>
   );
 }

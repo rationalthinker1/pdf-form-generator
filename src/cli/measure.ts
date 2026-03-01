@@ -55,30 +55,40 @@ export async function measureForm(
 
     // Generate PDF via Playwright — captures all CSS, Tailwind, fonts exactly as rendered
     console.log('  Printing to PDF...')
-    const pdfBytes = await page.pdf({ printBackground: true, margin: { top: 0, right: 0, bottom: 0, left: 0 } })
+    const pdfBytes = await page.pdf({
+      printBackground: true,
+      width: '8.5in',
+      height: '11in',
+      margin: { top: 0, right: 0, bottom: 0, left: 0 },
+    })
     console.log('  PDF printed')
 
     // Re-extract field positions relative to each Page element's top-left corner,
     // converted to PDF points. Playwright prints each [data-pdf-page] as a separate page.
     const SCALE = 72 / 96;
-    const fields = await page.evaluate((scale) => {
+    // Playwright pdf() breaks pages every viewport-height (1056px). To find a field's
+    // position within its PDF page, compute (field absolute doc top - pageIndex * 1056).
+    const PAGE_HEIGHT_PX = 1056;
+    const fields = await page.evaluate(({ scale, pageHeightPx }) => {
+      const pageEls = Array.from(document.querySelectorAll<HTMLElement>('[data-pdf-page]'));
       return Array.from(document.querySelectorAll<HTMLElement>('[data-field-name]')).map(el => {
         const fieldRect = el.getBoundingClientRect();
-        // Find the containing page element
         const pageEl = el.closest<HTMLElement>('[data-pdf-page]');
         const pageRect = pageEl ? pageEl.getBoundingClientRect() : { left: 0, top: 0 };
-        // pageEl's offset from document top (accounts for Document wrapper padding/gap)
-        const pageOffsetTop = pageEl ? pageEl.getBoundingClientRect().top + window.scrollY : 0;
+        const pageIndex = pageEl ? pageEls.indexOf(pageEl) : 0;
+        // Field's absolute top in document (scrollY=0 in headless)
+        const fieldDocTop = fieldRect.top + window.scrollY;
+        // Subtract where Playwright's PDF page N starts (pageIndex * pageHeightPx)
+        const yWithinPdfPage = fieldDocTop - pageIndex * pageHeightPx;
         return {
           name: el.dataset.fieldName!,
           xPt: (fieldRect.left - pageRect.left) * scale,
-          // yTopPt = field's offset from page top + page's offset from document top
-          yTopPt: (fieldRect.top - pageRect.top + pageOffsetTop) * scale,
+          yTopPt: yWithinPdfPage * scale,
           widthPt: fieldRect.width * scale,
           heightPt: fieldRect.height * scale,
         };
       });
-    }, SCALE);
+    }, { scale: SCALE, pageHeightPx: PAGE_HEIGHT_PX });
 
     // Attach PDF-space coords to each field in extracted data
     const fieldMap = new Map(fields.map(f => [f.name, f]));

@@ -20,8 +20,7 @@ export async function generatePdf(
       if (!page) continue;
       const { height: pageHeightPt } = page.getSize();
 
-      const pageTopPt = field.pageIndex * pageHeightPt;
-      const yPt = pageHeightPt - (field.yTopPt - pageTopPt) - field.heightPt;
+      const yPt = pageHeightPt - field.yTopPt - field.heightPt;
 
       if (field.type === 'checkbox') {
         const cb = form.createCheckBox(field.name);

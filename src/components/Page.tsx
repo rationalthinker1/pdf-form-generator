@@ -13,7 +13,7 @@ export function Page({ size = 'letter', children }: PageProps) {
   return (
     <div
       data-pdf-page={size}
-      className="page relative bg-white shadow-lg px-10 py-12"
+      className="page relative bg-white shadow-lg flex flex-col  px-10 pt-12"
       style={{
         width: dims.widthPx,
         height: dims.heightPx,
