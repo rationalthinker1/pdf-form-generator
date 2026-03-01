@@ -22,8 +22,12 @@ export function Page({ size = 'letter', children, footer }: PageProps) {
         gridTemplateRows: footer ? '1fr auto' : '1fr',
       }}
     >
-      <div className="min-h-0 overflow-hidden px-10 pt-12">{children}</div>
-      {footer}
+      <div className="min-h-0 overflow-hidden px-10 pt-12 grid grid-rows-[1fr]">
+        {children}
+      </div>
+      <div>
+        {footer}
+      </div>
     </div>
   );
 }
