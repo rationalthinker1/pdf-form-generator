@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from 'react';
-import type { ExtractedData, ExtractedPage, PageSize } from '../types';
+import type { ExtractedData, ExtractedPage, FieldType, PageSize } from '../types';
 import { PAGE_SIZES } from '../types';
 
 function rgbToHex(rgb: string): string {
@@ -44,7 +44,7 @@ export function Document({ children }: DocumentProps) {
             const storedDefault = el.dataset.fieldDefaultValue;
             return {
               name,
-              type: (el.dataset.fieldType ?? 'text') as 'text' | 'date',
+              type: (el.dataset.fieldType ?? 'text') as FieldType,
               pageIndex,
               x: rect.left - pageRect.left,
               y: rect.top - pageRect.top,

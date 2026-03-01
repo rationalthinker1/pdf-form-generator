@@ -9,6 +9,171 @@ export default function CHPContractPage2() {
   return (
     <Pdf.Document>
 
+      {/* ── PAGE 0: IMPORTANT — LEGAL RIGHTS COVER PAGE ──────────────── */}
+      <Pdf.Page size="letter">
+        <div className="text-[11px] text-gray-900 leading-snug font-sans border border-gray-400">
+
+          {/* Header */}
+          <div className="">
+            <div className="bg-[#1e3a5f] text-white px-3 py-1.5 border-b border-[#2d5a8e]">
+              <p className="font-bold text-center text-[13px] leading-tight">IMPORTANT: What You Need to Know About Your Legal Rights</p>
+            </div>
+            <div className="px-3 py-1.5 text-[14px] text-center font-semibold">
+              <p>Please read, and if you sign a contract, keep all paperwork for your records.</p>
+              <p>Companies are required by law to provide this cover page with contracts for the</p>
+              <p>products and services listed below.</p>
+            </div>
+          </div>
+
+          {/* Government disclaimer */}
+          <div className="px-3 py-2 border-b border-gray-400">
+            <p className="font-bold text-center text-[16px]">The Government of Ontario is not affiliated with and does not endorse any company</p>
+          </div>
+
+          {/* Products list */}
+          <div className="px-3 py-2 border-b border-gray-400">
+            <p className="mb-2 font-semibold">
+              Under Ontario's Consumer Protection Act, 2002 unsolicited door-to-door marketing and
+              contracting for the following products and services are illegal, subject to certain exceptions.
+            </p>
+            <div className="flex flex-row text-[12px] gap-16 pl-4">
+              <ul className="space-y-0.5">
+                <li>• Furnaces</li>
+                <li>• Air conditioners</li>
+                <li>• Air cleaners</li>
+                <li>• Air purifiers</li>
+                <li>• Water heaters</li>
+                <li>• Water treatment devices</li>
+              </ul>
+              <ul className="space-y-0.5">
+                <li>• Water purifiers</li>
+                <li>• Water filters</li>
+                <li>• Water softeners</li>
+                <li>• Duct cleaning services</li>
+                <li>• Bundles of these goods and</li>
+                <li className="pl-3">services (such as HVAC)</li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Checkbox options */}
+          <div className="px-3 py-3 border-b border-gray-400">
+            <p className="font-bold mb-3">
+              Suppliers cannot market or contract for these products or services at your home unless one
+              of the situations applies (please check the appropriate box):
+            </p>
+            <div className="flex flex-row items-start gap-3 mb-3 pl-2">
+              <Pdf.CheckboxField name="p0.invited_supplier" className="mt-0.5 shrink-0 w-5 h-5" />
+              <p>
+                You contacted the supplier to invite them to your home to buy or lease at least one of
+                the products above (not for repair, an energy assessment, maintenance, or any other reason).
+              </p>
+            </div>
+            <div className="flex flex-row items-start gap-3 pl-2">
+              <Pdf.CheckboxField name="p0.current_supplier" className="mt-0.5 shrink-0 w-5 h-5" />
+              <p>
+                You agreed to allow your current supplier to come to your home and agreed they
+                may offer you a contract for one of the products or services listed above.
+              </p>
+            </div>
+          </div>
+
+          {/* Cancellation rights */}
+          <div className="px-3 py-2 border-b border-gray-400">
+            <p className="font-bold mb-2">
+              You may cancel this contract within 10 days after receiving a written copy of it. You do not
+              need a reason to cancel, but cancel it in writing so you have proof.
+            </p>
+            {/* Company name: label + underline with text right-aligned */}
+            <div className="flex flex-row items-end gap-1 mb-1">
+              <span className="whitespace-nowrap shrink-0">Name of company offering this contract:</span>
+              <div className="relative flex-1 border-b border-gray-800">
+                <Pdf.TextField name="p0.company_name" type="text" defaultValue="Canada Home Protect"
+                  className="absolute inset-0 bg-transparent border-none text-right text-[11px] h-5 px-0" />
+              </div>
+            </div>
+            {/* Purpose: label on its own line, then underline with centered text */}
+            <p className="mb-0.5">For what purpose did you ask this business to come to your home?</p>
+            <div className="relative border-b border-gray-800 mb-0">
+              <Pdf.TextField name="p0.purpose" type="text" defaultValue="home maintenance &amp; service program"
+                className="w-full bg-transparent border-none text-center text-[11px] h-5 px-0" />
+            </div>
+          </div>
+
+          {/* Void contract notice */}
+          <div className="px-3 py-2 border-b border-gray-400">
+            <p className="mb-2">
+              If you did not invite this salesperson to your home for the purpose of buying or leasing the
+              goods or services listed above, this contract may be void and you may be able to keep the
+              goods or services without any obligations.
+            </p>
+            <p className="mb-2">
+              <span className="font-bold">IMPORTANT:</span> Suppliers may register a security interest (commonly known as a lien) on the
+              goods that you are acquiring, and they may also register a notice of security interest on the
+              title to your home.
+            </p>
+            <p className="mb-2 font-bold">
+              Before you sign, please review your contract. Ask your supplier if the company will register a
+              security interest. This could have legal or financial implications should you decide to cancel
+              the contract early, secure financing, or sell your home. In these circumstances, seeking the
+              advice of a lawyer is recommended.
+            </p>
+            <div className="flex flex-row items-end gap-1 mb-2">
+              <span className="whitespace-nowrap shrink-0">Your name (please print)</span>
+              <div className="flex-1 border-b border-gray-800 h-4" />
+            </div>
+            <div className="flex flex-row items-end gap-6">
+              <div className="flex flex-row items-end gap-1 flex-1">
+                <span className="whitespace-nowrap shrink-0">Your signature</span>
+                <div className="flex-1 border-b border-gray-800 h-4" />
+              </div>
+              <div className="flex flex-row items-end gap-1">
+                <span className="whitespace-nowrap shrink-0">Date</span>
+                <div className="w-28 border-b border-gray-800 h-4" />
+              </div>
+            </div>
+          </div>
+
+          {/* Footer: CPO logo area + info box */}
+          <div className="flex flex-row">
+            <div className="flex flex-col justify-between px-3 py-2 w-44 border-r border-gray-400">
+              <div className="flex flex-row items-center gap-2">
+                {/* CPO logo: red ring with inner filled circle */}
+                <svg viewBox="0 0 40 40" className="w-10 h-10 shrink-0">
+                  <circle cx="20" cy="20" r="18" fill="none" stroke="#c8102e" strokeWidth="4" />
+                  <circle cx="20" cy="20" r="10" fill="#c8102e" />
+                </svg>
+                <div className="text-[9px] font-black uppercase leading-tight text-[#1e3a5f]">
+                  <div>Consumer</div>
+                  <div>Protection</div>
+                  <div>Ontario</div>
+                </div>
+              </div>
+              <p className="text-[9px] text-gray-500 mt-2">January 16, 2018</p>
+            </div>
+            <div className="flex-1 bg-[#1e3a5f] text-white px-3 py-2 flex flex-col justify-center">
+              <p className="text-[10px] font-bold mb-1 text-center">
+                If you have questions about your rights as a consumer
+                or what should be included in your contract, call
+                Consumer Protection Ontario before signing:
+              </p>
+              <p className="text-[9px] text-center">
+                416-326-8800 or 1-800-889-9768/TTY: 416-229-6086 or 1-877-666-6545
+              </p>
+              <p className="text-[9px] text-center">Ontario.ca/consumerprotection</p>
+            </div>
+          </div>
+
+          {/* Page footer */}
+          <div className="flex flex-row justify-between px-3 py-1 border-t border-gray-300">
+            <span className="text-[9px] text-gray-500">Canada Home Protect</span>
+            <span className="text-[9px] text-gray-500">1/5</span>
+            <span className="text-[9px] text-gray-500">PG1/5</span>
+          </div>
+
+        </div>
+      </Pdf.Page>
+
       {/* ── PAGE 1: CONSUMER PROTECTION ACT ─────────────────────────── */}
       <Pdf.Page size="letter">
         <div className="px-12 py-2 text-[12.5px] text-gray-900 leading-snug font-sans">
@@ -255,7 +420,7 @@ export default function CHPContractPage2() {
           {/* Premium Plan row */}
           <div className={tableRow}>
             <div className="flex-[3] border-r border-gray-400 px-2 py-1 flex items-center gap-2">
-              <div className="w-4 h-4 border border-gray-600 flex-shrink-0" />
+              <div className="w-4 h-4 border border-gray-600 shrink-0" />
               <span className="text-xs text-gray-800"><strong>Premium Plan</strong> (Heating &amp; Cooling)</span>
             </div>
             <div className="w-28 border-r border-gray-400 px-2 py-1 text-xs text-gray-800 text-center flex items-center justify-center">$29.98</div>

@@ -17,6 +17,7 @@ import { TextField } from './components/TextField';
 import { Text } from './components/Text';
 import { Box } from './components/Box';
 import { Script } from './components/Script';
+import { CheckboxField } from './components/CheckboxField';
 
 export const Pdf = {
   Document,
@@ -25,6 +26,7 @@ export const Pdf = {
   Text,
   Box,
   Script,
+  CheckboxField,
 } as const;
 
 export { InputField } from './components/InputField';

@@ -23,7 +23,18 @@ export async function generatePdf(
       const pageTopPt = field.pageIndex * pageHeightPt;
       const yPt = pageHeightPt - (field.yTopPt - pageTopPt) - field.heightPt;
 
-      if (field.type === 'text' || field.type === 'textarea' || field.type === 'date') {
+      if (field.type === 'checkbox') {
+        const cb = form.createCheckBox(field.name);
+        cb.addToPage(page, {
+          x: field.xPt,
+          y: yPt,
+          width: field.widthPt,
+          height: field.heightPt,
+          borderColor: undefined,
+          borderWidth: 1,
+        });
+        if (field.defaultValue === 'true') cb.check();
+      } else if (field.type === 'text' || field.type === 'textarea' || field.type === 'date') {
         const tf = form.createTextField(field.name);
         if (field.type === 'textarea') tf.enableMultiline();
         const PAD_LEFT = 2;
