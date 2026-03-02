@@ -19,6 +19,7 @@ import { Box } from './components/Box';
 import { Script } from './components/Script';
 import { CheckboxField } from './components/CheckboxField';
 import { Footer } from './components/Footer';
+import { InputField } from './components/InputField';
 
 export const Pdf = {
   Document,
@@ -29,6 +30,5 @@ export const Pdf = {
   Script,
   CheckboxField,
   Footer,
+  InputField,
 } as const;
-
-export { InputField } from './components/InputField';

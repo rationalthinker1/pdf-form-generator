@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Pdf, InputField } from '../../index';
+import { Pdf } from '../../index';
 
 const navy = 'bg-[#1e3a5f] text-white font-bold uppercase'
 const cell = 'flex-1 border-r border-gray-400 last:border-r-0'
@@ -138,15 +138,16 @@ export default function CHPContractPage2() {
             <div className="flex flex-row items-end gap-1 mb-1">
               <span className="whitespace-nowrap shrink-0">Name of company offering this contract:</span>
               <div className="relative flex-1 border-b border-gray-800">
-                <InputField name="p0.company_name" label="Company Name" type="text"
-                  value={values['p0.company_name']} onChange={set('p0.company_name')}
-                  labelClassName="hidden" textClassName="bg-transparent border-none text-right text-[11px] h-5 px-0" />
+                <Pdf.TextField name="p0.company_name" label="Company Name" type="text"
+                  defaultValue={values['p0.company_name']} onChange={set('p0.company_name')}
+                  className="bg-transparent border-none text-right text-[11px] h-5 px-0" />
               </div>
             </div>
             {/* Purpose: label on its own line, then underline with centered text */}
             <p className="mb-0.5">For what purpose did you ask this business to come to your home?</p>
             <div className="relative border-b border-gray-800 mb-0">
-              <Pdf.TextField name="p0.purpose" type="text"
+              <Pdf.TextField name="p0.purpose" type="text" onChange={set('p0.purpose')}
+                defaultValue={values['p0.purpose']}
                 className="w-full bg-transparent border-none text-center text-[11px] h-5 px-0" />
             </div>
           </div>
@@ -403,79 +404,50 @@ export default function CHPContractPage2() {
 
           {/* Row 1: First Name | Last Name | Date of Birth */}
           <div className={tableRow}>
-            <div className={cell}>
-              <InputField name="p2.first_name" label="First Name" type="text"
-                labelClassName="text-[9px]" textClassName="bg-white h-6" />
-            </div>
-            <div className={cell}>
-              <InputField name="p2.last_name" label="Last Name" type="text"
-                labelClassName="text-[9px]" textClassName="bg-white h-6" />
-            </div>
-            <div className="border-r-0 border-gray-400 w-44">
-              <InputField name="p2.date_of_birth" label="Date of Birth" type="date"
-                labelClassName="text-[9px]" textClassName="bg-white h-6" />
-            </div>
+            <Pdf.InputField name="p2.first_name" label="First Name" type="text"
+              containerClassName={cell} />
+            <Pdf.InputField name="p2.last_name" label="Last Name" type="text"
+              containerClassName={cell} />
+            <Pdf.InputField name="p2.date_of_birth" label="Date of Birth" type="date"
+              containerClassName="w-44" />
           </div>
 
           {/* Row 2: Co-Customer First Name | Co-Customer Last Name | Date of Birth */}
           <div className={tableRow}>
-            <div className={cell}>
-              <InputField name="p2.cocustomer_first_name" label="Co-Customer First Name" type="text"
-                labelClassName="text-[9px]" textClassName="bg-white h-6" />
-            </div>
-            <div className={cell}>
-              <InputField name="p2.cocustomer_last_name" label="Co-Customer Last Name" type="text"
-                labelClassName="text-[9px]" textClassName="bg-white h-6" />
-            </div>
-            <div className="w-44">
-              <InputField name="p2.cocustomer_date_of_birth" label="Date of Birth" type="date"
-                labelClassName="text-[9px]" textClassName="bg-white h-6" />
-            </div>
+            <Pdf.InputField name="p2.cocustomer_first_name" label="Co-Customer First Name" type="text"
+              containerClassName={cell} />
+            <Pdf.InputField name="p2.cocustomer_last_name" label="Co-Customer Last Name" type="text"
+              containerClassName={cell} />
+            <Pdf.InputField name="p2.cocustomer_date_of_birth" label="Date of Birth" type="date"
+              containerClassName="w-44" />
           </div>
 
           {/* Row 3: Installation Address | Unit # */}
           <div className={tableRow}>
-            <div className={cell}>
-              <InputField name="p2.address" label="Installation Address (Place of execution unless otherwise noted)" type="text"
-                labelClassName="text-[9px]" textClassName="bg-white h-6" />
-            </div>
-            <div className="w-36">
-              <InputField name="p2.unit" label="Unit #" type="text"
-                labelClassName="text-[9px]" textClassName="bg-white h-6" />
-            </div>
+            <Pdf.InputField name="p2.address" label="Installation Address (Place of execution unless otherwise noted)" type="text"
+              containerClassName={cell} />
+            <Pdf.InputField name="p2.unit" label="Unit #" type="text"
+              containerClassName="w-44" />
           </div>
 
-          {/* Row 4: City | Province | Email Address */}
+          {/* Row 4: City | Province | Postal Code */}
           <div className={tableRow}>
-            <div className={cell}>
-              <InputField name="p2.city" label="City" type="text"
-                labelClassName="text-[9px]" textClassName="bg-white h-6" />
-            </div>
-            <div className="w-24 border-r border-gray-400">
-              <InputField name="p2.province" label="Province" type="text"
-                labelClassName="text-[9px]" textClassName="bg-white h-6" />
-            </div>
-            <div className={`${cell} flex-[0.375] `}>
-              <InputField name="p2.postal_code" label="Postal Code" type="text"
-                labelClassName="text-[9px]" textClassName="bg-white h-6" />
-            </div>
+            <Pdf.InputField name="p2.city" label="City" type="text"
+              containerClassName={cell} />
+            <Pdf.InputField name="p2.province" label="Province" type="text"
+              containerClassName="w-48 border-r border-gray-400" />
+            <Pdf.InputField name="p2.postal_code" label="Postal Code" type="text"
+              containerClassName={`w-44`} />
           </div>
 
-          {/* Row 5: Postal Code | Home Phone | Mobile or Office */}
+          {/* Row 5: Email | Home Phone | Cell Phone */}
           <div className={`${tableRow} border-b-0`}>
-          <div className={cell}>
-              <InputField name="p2.email" label="Email" type="text"
-                labelClassName="text-[9px]" textClassName="bg-white h-6" />
-            </div>
-           
-            <div className={cell}>
-              <InputField name="p2.home_phone" label="Home Phone" type="text"
-                labelClassName="text-[9px]" textClassName="bg-white h-6" />
-            </div>
-            <div className={cell}>
-              <InputField name="p2.mobile_or_office" label="Cell Phone" type="text"
-                labelClassName="text-[9px]" textClassName="bg-white h-6" />
-            </div>
+            <Pdf.InputField name="p2.email" label="Email" type="text"
+              containerClassName={cell} />
+            <Pdf.InputField name="p2.home_phone" label="Home Phone" type="text"
+              containerClassName={cell} />
+            <Pdf.InputField name="p2.mobile_or_office" label="Cell Phone" type="text"
+              containerClassName={cell} />
           </div>
 
         </div>
@@ -490,7 +462,7 @@ export default function CHPContractPage2() {
 
           {/* Column headers */}
           <div className={`${tableRow} bg-gray-100`}>
-            <div className="flex-[3] border-r border-gray-400 px-2 py-0.5 text-[10px] font-bold text-gray-800">Description</div>
+            <div className="flex-3 border-r border-gray-400 px-2 py-0.5 text-[10px] font-bold text-gray-800">Description</div>
             <div className="w-28 border-r border-gray-400 px-2 py-0.5 text-[10px] font-bold text-gray-800 text-center">Payment</div>
             <div className="w-20 border-r border-gray-400 px-2 py-0.5 text-[10px] font-bold text-gray-800 text-center">HST</div>
             <div className="w-24 px-2 py-0.5 text-[10px] font-bold text-gray-800 text-center">Total</div>
@@ -498,7 +470,7 @@ export default function CHPContractPage2() {
 
           {/* Premium Plan row */}
           <div className={tableRow}>
-            <div className="flex-[3] border-r border-gray-400 px-2 py-0.5 flex items-center gap-2">
+            <div className="flex-3 border-r border-gray-400 px-2 py-0.5 flex items-center gap-2">
               <div className="w-3.5 h-3.5 border border-gray-600 shrink-0" />
               <span className="text-[10px] text-gray-800"><strong>Premium Plan</strong> (Heating &amp; Cooling)</span>
             </div>
@@ -523,12 +495,12 @@ export default function CHPContractPage2() {
               *Please check all that apply. See details of each plan in HMP Terms and Conditions.
             </div>
             <div className={`w-20 flex items-center justify-center px-3 text-[8px] font-bold ${navy}`} style={{ width: 80 }}>
-                Start Date
-              </div>
+              Start Date
+            </div>
             <div className="flex-1">
-            <Pdf.TextField type="text" name="p2.start_date"
-                   className=" h-full w-full" />
-              </div>
+              <Pdf.TextField type="text" name="p2.start_date"
+                className=" h-full w-full" />
+            </div>
           </div>
 
         </div>
