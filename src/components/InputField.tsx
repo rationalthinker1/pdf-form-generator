@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ChangeEvent } from 'react'
 import type { FieldType } from '../types'
 import { Pdf } from '..'
 
@@ -9,6 +9,8 @@ interface InputFieldProps {
   name: string
   label: string
   type: FieldType
+  value?: string
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void
   defaultValue?: string
   containerClassName?: string
   containerStyle?: React.CSSProperties
@@ -22,6 +24,8 @@ export function InputField({
   name,
   label,
   type,
+  value: valueProp,
+  onChange: onChangeProp,
   defaultValue = '',
   containerClassName = '',
   containerStyle = {},
@@ -30,7 +34,10 @@ export function InputField({
   textClassName = '',
   textStyle = {},
 }: InputFieldProps) {
-  const [value, setValue] = useState(defaultValue)
+  const [localValue, setLocalValue] = useState(defaultValue)
+  const controlled = valueProp !== undefined
+  const value = controlled ? valueProp : localValue
+  const onChange = controlled ? onChangeProp! : (e: ChangeEvent<HTMLInputElement>) => setLocalValue(e.target.value)
 
   return (
     <div className={`w-auto flex-1 ${containerClassName}`} style={containerStyle}>
@@ -51,7 +58,7 @@ export function InputField({
         <input
           type={type === 'date' ? 'date' : 'text'}
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onChange={onChange}
           className={[
             'absolute inset-0 h-full w-full px-2 py-1 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-blue-400 print:hidden',
             type === 'date' ? 'bg-transparent' : 'bg-blue-50',

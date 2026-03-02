@@ -1,4 +1,4 @@
-import { TextField } from '../../components';
+import { useState } from 'react'
 import { Pdf, InputField } from '../../index';
 
 const navy = 'bg-[#1e3a5f] text-white font-bold uppercase'
@@ -6,7 +6,50 @@ const cell = 'flex-1 border-r border-gray-400 last:border-r-0'
 const tableRow = 'flex flex-row border-b border-gray-400 last:border-b-0'
 const outerBorder = 'border border-gray-400'
 
+type FormValues = {
+  'p0.company_name': string
+  'p0.purpose': string
+  'p2.first_name': string
+  'p2.last_name': string
+  'p2.date_of_birth': string
+  'p2.cocustomer_first_name': string
+  'p2.cocustomer_last_name': string
+  'p2.cocustomer_date_of_birth': string
+  'p2.address': string
+  'p2.unit': string
+  'p2.city': string
+  'p2.province': string
+  'p2.postal_code': string
+  'p2.email': string
+  'p2.home_phone': string
+  'p2.mobile_or_office': string
+  'p2.start_date': string
+}
+
 export default function CHPContractPage2() {
+  const [values, setValues] = useState<FormValues>({
+    'p0.company_name': '',
+    'p0.purpose': '',
+    'p2.first_name': '',
+    'p2.last_name': '',
+    'p2.date_of_birth': '',
+    'p2.cocustomer_first_name': '',
+    'p2.cocustomer_last_name': '',
+    'p2.cocustomer_date_of_birth': '',
+    'p2.address': '',
+    'p2.unit': '',
+    'p2.city': '',
+    'p2.province': '',
+    'p2.postal_code': '',
+    'p2.email': '',
+    'p2.home_phone': '',
+    'p2.mobile_or_office': '',
+    'p2.start_date': '',
+  })
+
+  const set = (field: keyof FormValues) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    setValues(v => ({ ...v, [field]: e.target.value }))
+
   return (
     <Pdf.Document>
 
@@ -95,8 +138,9 @@ export default function CHPContractPage2() {
             <div className="flex flex-row items-end gap-1 mb-1">
               <span className="whitespace-nowrap shrink-0">Name of company offering this contract:</span>
               <div className="relative flex-1 border-b border-gray-800">
-                <Pdf.TextField name="p0.company_name" type="text"
-                  className="absolute inset-0 bg-transparent border-none text-right text-[11px] h-5 px-0" />
+                <InputField name="p0.company_name" label="Company Name" type="text"
+                  value={values['p0.company_name']} onChange={set('p0.company_name')}
+                  labelClassName="hidden" textClassName="bg-transparent border-none text-right text-[11px] h-5 px-0" />
               </div>
             </div>
             {/* Purpose: label on its own line, then underline with centered text */}
