@@ -5,16 +5,18 @@ interface TextFieldProps {
   label?: string
   defaultValue?: string
   className?: string
+  containerClassName?: string
   style?: React.CSSProperties
   type?: FieldType
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 const baseClass = 'relative h-9 bg-blue-50 px-2 py-1 text-sm text-gray-800'
+const baseContainerClassName = 'relative';
 
-export function TextField({ name, label, defaultValue = "", className, style, type = 'text', onChange }: TextFieldProps) {
+export function TextField({ name, label, defaultValue = "", className = "", containerClassName = "", style, type = 'text', onChange }: TextFieldProps) {
   return (
-    <div className="relative">
+    <div className={[baseContainerClassName, containerClassName].filter(Boolean).join(' ')}>
       <div
         data-field-name={name}
         data-field-type={type}

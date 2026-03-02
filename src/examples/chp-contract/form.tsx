@@ -8,6 +8,9 @@ const outerBorder = 'border border-gray-400'
 type FormValues = {
   'p0.company_name': string
   'p0.purpose': string
+  'p0.print_name': string
+  'p0.signature': string
+  'p0.sig_date': string
   'p2.first_name': string
   'p2.last_name': string
   'p2.date_of_birth': string
@@ -29,6 +32,9 @@ export default function CHPContractPage2() {
   const [values, setValues] = useState<FormValues>({
     'p0.company_name': '',
     'p0.purpose': '',
+    'p0.print_name': '',
+    'p0.signature': '',
+    'p0.sig_date': '',
     'p2.first_name': '',
     'p2.last_name': '',
     'p2.date_of_birth': '',
@@ -171,16 +177,16 @@ export default function CHPContractPage2() {
             </p>
             <div className="flex flex-row items-end gap-1 mb-2">
               <span className="whitespace-nowrap shrink-0">Your name (please print)</span>
-              <div className="flex-1 border-b border-gray-800 h-4" />
+              <Pdf.TextField name="p0.print_name" label="Print Name" defaultValue={values['p0.print_name']} onChange={set('p0.print_name')} containerClassName="flex-1" className="bg-transparent border-b border-gray-800 rounded-none h-9" />
             </div>
             <div className="flex flex-row items-end gap-6">
               <div className="flex flex-row items-end gap-1 flex-1">
                 <span className="whitespace-nowrap shrink-0">Your signature</span>
-                <div className="flex-1 border-b border-gray-800 h-4" />
+                <Pdf.TextField name="p0.signature" label="Signature" defaultValue={values['p0.signature']} onChange={set('p0.signature')} containerClassName="flex-1" className="bg-transparent border-b border-gray-800 rounded-none h-9" />
               </div>
               <div className="flex flex-row items-end gap-1">
                 <span className="whitespace-nowrap shrink-0">Date</span>
-                <div className="w-28 border-b border-gray-800 h-4" />
+                <Pdf.TextField name="p0.sig_date" label="Date" defaultValue={values['p0.sig_date']} onChange={set('p0.sig_date')} containerClassName="w-28" className="bg-transparent border-b border-gray-800 rounded-none h-9" />
               </div>
             </div>
           </div>
