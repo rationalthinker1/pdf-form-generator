@@ -418,14 +418,14 @@ export default function CHPContractPage2() {
           {/* Row 3: Installation Address | Unit # */}
           <div className={tableRow}>
             <Pdf.InputField name="p2.address" label="Installation Address (Place of execution unless otherwise noted)" type="text" borderRight />
-            <Pdf.InputField name="p2.unit" label="Unit #" type="text" width="36" />
+            <Pdf.InputField name="p2.unit" label="Unit #" type="text" width="44" />
           </div>
 
           {/* Row 4: City | Province | Postal Code */}
           <div className={tableRow}>
             <Pdf.InputField name="p2.city" label="City" type="text" borderRight />
-            <Pdf.InputField name="p2.province" label="Province" type="text" width="24" borderRight />
-            <Pdf.InputField name="p2.postal_code" label="Postal Code" type="text" width="32" />
+            <Pdf.InputField name="p2.province" label="Province" type="text" width="36" borderRight />
+            <Pdf.InputField name="p2.postal_code" label="Postal Code" type="text" width="44" />
           </div>
 
           {/* Row 5: Email | Home Phone | Cell Phone */}
