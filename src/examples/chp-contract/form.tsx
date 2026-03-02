@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Pdf } from '../../index';
 
 const navy = 'bg-[#1e3a5f] text-white font-bold uppercase'
-const cell = 'flex-1 border-r border-gray-400 last:border-r-0'
 const tableRow = 'flex flex-row border-b border-gray-400 last:border-b-0'
 const outerBorder = 'border border-gray-400'
 
@@ -404,50 +403,36 @@ export default function CHPContractPage2() {
 
           {/* Row 1: First Name | Last Name | Date of Birth */}
           <div className={tableRow}>
-            <Pdf.InputField name="p2.first_name" label="First Name" type="text"
-              containerClassName={cell} />
-            <Pdf.InputField name="p2.last_name" label="Last Name" type="text"
-              containerClassName={cell} />
-            <Pdf.InputField name="p2.date_of_birth" label="Date of Birth" type="date"
-              containerClassName="w-44" />
+            <Pdf.InputField name="p2.first_name" label="First Name" type="text" borderRight />
+            <Pdf.InputField name="p2.last_name" label="Last Name" type="text" borderRight />
+            <Pdf.InputField name="p2.date_of_birth" label="Date of Birth" type="date" width="44" />
           </div>
 
           {/* Row 2: Co-Customer First Name | Co-Customer Last Name | Date of Birth */}
           <div className={tableRow}>
-            <Pdf.InputField name="p2.cocustomer_first_name" label="Co-Customer First Name" type="text"
-              containerClassName={cell} />
-            <Pdf.InputField name="p2.cocustomer_last_name" label="Co-Customer Last Name" type="text"
-              containerClassName={cell} />
-            <Pdf.InputField name="p2.cocustomer_date_of_birth" label="Date of Birth" type="date"
-              containerClassName="w-44" />
+            <Pdf.InputField name="p2.cocustomer_first_name" label="Co-Customer First Name" type="text" borderRight />
+            <Pdf.InputField name="p2.cocustomer_last_name" label="Co-Customer Last Name" type="text" borderRight />
+            <Pdf.InputField name="p2.cocustomer_date_of_birth" label="Date of Birth" type="date" width="44" />
           </div>
 
           {/* Row 3: Installation Address | Unit # */}
           <div className={tableRow}>
-            <Pdf.InputField name="p2.address" label="Installation Address (Place of execution unless otherwise noted)" type="text"
-              containerClassName={cell} />
-            <Pdf.InputField name="p2.unit" label="Unit #" type="text"
-              containerClassName="w-44" />
+            <Pdf.InputField name="p2.address" label="Installation Address (Place of execution unless otherwise noted)" type="text" borderRight />
+            <Pdf.InputField name="p2.unit" label="Unit #" type="text" width="36" />
           </div>
 
           {/* Row 4: City | Province | Postal Code */}
           <div className={tableRow}>
-            <Pdf.InputField name="p2.city" label="City" type="text"
-              containerClassName={cell} />
-            <Pdf.InputField name="p2.province" label="Province" type="text"
-              containerClassName="w-48 border-r border-gray-400" />
-            <Pdf.InputField name="p2.postal_code" label="Postal Code" type="text"
-              containerClassName={`w-44`} />
+            <Pdf.InputField name="p2.city" label="City" type="text" borderRight />
+            <Pdf.InputField name="p2.province" label="Province" type="text" width="24" borderRight />
+            <Pdf.InputField name="p2.postal_code" label="Postal Code" type="text" width="32" />
           </div>
 
           {/* Row 5: Email | Home Phone | Cell Phone */}
           <div className={`${tableRow} border-b-0`}>
-            <Pdf.InputField name="p2.email" label="Email" type="text"
-              containerClassName={cell} />
-            <Pdf.InputField name="p2.home_phone" label="Home Phone" type="text"
-              containerClassName={cell} />
-            <Pdf.InputField name="p2.mobile_or_office" label="Cell Phone" type="text"
-              containerClassName={cell} />
+            <Pdf.InputField name="p2.email" label="Email" type="text" borderRight />
+            <Pdf.InputField name="p2.home_phone" label="Home Phone" type="text" borderRight />
+            <Pdf.InputField name="p2.mobile_or_office" label="Cell Phone" type="text" />
           </div>
 
         </div>

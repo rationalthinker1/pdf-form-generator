@@ -12,8 +12,9 @@ interface InputFieldProps {
   value?: string
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void
   defaultValue?: string
-  containerClassName?: string
-  containerStyle?: React.CSSProperties
+  flex?: string        // e.g. "1", "[0.375]", "none"
+  width?: string       // e.g. "44", "36", "24" (Tailwind w-* suffix)
+  borderRight?: boolean
   labelClassName?: string
   labelStyle?: React.CSSProperties
   textClassName?: string
@@ -27,8 +28,9 @@ export function InputField({
   value: valueProp,
   onChange: onChangeProp,
   defaultValue = '',
-  containerClassName = '',
-  containerStyle = {},
+  flex,
+  width,
+  borderRight,
   labelClassName = '',
   labelStyle = {},
   textClassName = '',
@@ -39,22 +41,28 @@ export function InputField({
   const value = controlled ? valueProp : localValue
   const onChange = controlled ? onChangeProp! : (e: ChangeEvent<HTMLInputElement>) => setLocalValue(e.target.value)
 
+  const containerClass = [
+    flex ? `flex-${flex}` : width ? '' : 'flex-1',
+    width ? `w-${width}` : '',
+    borderRight ? 'border-r border-gray-400' : '',
+  ].filter(Boolean).join(' ')
+
   return (
-    <div className={containerClassName || 'w-auto flex-1'} style={containerStyle}>
+    <div className={containerClass}>
       <div>
         <Pdf.Text className={`${labelClass} ${labelClassName}`} style={labelStyle}>
           {label}
         </Pdf.Text>
       </div>
       <Pdf.TextField
-          name={name}
-          label={label}
-          type={type}
-          defaultValue={value}
-          onChange={onChange}
-          className={`${textClass} ${textClassName} invisible`}
-          style={textStyle}
-        />
+        name={name}
+        label={label}
+        type={type}
+        defaultValue={value}
+        onChange={onChange}
+        className={`${textClass} ${textClassName} invisible`}
+        style={textStyle}
+      />
     </div>
   )
 }
