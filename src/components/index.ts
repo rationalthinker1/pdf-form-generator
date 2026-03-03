@@ -4,3 +4,4 @@ export { TextField } from './TextField';
 export { Text } from './Text';
 export { Box } from './Box';
 export { CheckboxField } from './CheckboxField';
+export { SignatureField } from './SignatureField';

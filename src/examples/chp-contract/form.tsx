@@ -26,6 +26,18 @@ type FormValues = {
   'p2.home_phone': string
   'p2.mobile_or_office': string
   'p2.start_date': string
+  'p2.owner_signature': string
+  'p2.owner_print_name': string
+  'p2.owner_sig_month': string
+  'p2.owner_sig_day': string
+  'p2.owner_sig_year': string
+  'p2.owner_place_of_execution': string
+  'p2.cosig_signature': string
+  'p2.cosig_print_name': string
+  'p2.cosig_sig_month': string
+  'p2.cosig_sig_day': string
+  'p2.cosig_sig_year': string
+  'p2.cosig_place_of_execution': string
 }
 
 export default function CHPContractPage2() {
@@ -50,6 +62,18 @@ export default function CHPContractPage2() {
     'p2.home_phone': '',
     'p2.mobile_or_office': '',
     'p2.start_date': '',
+    'p2.owner_signature': '',
+    'p2.owner_print_name': '',
+    'p2.owner_sig_month': '',
+    'p2.owner_sig_day': '',
+    'p2.owner_sig_year': '',
+    'p2.owner_place_of_execution': '',
+    'p2.cosig_signature': '',
+    'p2.cosig_print_name': '',
+    'p2.cosig_sig_month': '',
+    'p2.cosig_sig_day': '',
+    'p2.cosig_sig_year': '',
+    'p2.cosig_place_of_execution': '',
   })
 
   const set = (field: keyof FormValues) => (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -186,7 +210,7 @@ export default function CHPContractPage2() {
               </div>
               <div className="flex flex-row items-end gap-1">
                 <span className="whitespace-nowrap shrink-0">Date</span>
-                <Pdf.TextField name="p0.sig_date" label="Date" defaultValue={values['p0.sig_date']} onChange={set('p0.sig_date')} containerClassName="w-28" className="bg-transparent border-b border-gray-800 rounded-none h-9" />
+                <Pdf.TextField name="p0.sig_date" type="date" label="Date" defaultValue={values['p0.sig_date']} onChange={set('p0.sig_date')} containerClassName="w-28" className="bg-transparent border-b border-gray-800 rounded-none h-9" />
               </div>
             </div>
           </div>
@@ -489,8 +513,9 @@ export default function CHPContractPage2() {
               Start Date
             </div>
             <div className="flex-1">
-              <Pdf.TextField type="text" name="p2.start_date"
-                className=" h-full w-full" />
+              <Pdf.TextField name="p2.start_date"
+                defaultValue={values['p2.start_date']} onChange={set('p2.start_date')}
+                className="h-9 w-full" />
             </div>
           </div>
 
@@ -550,15 +575,16 @@ export default function CHPContractPage2() {
                 <div className="flex items-center gap-1"><Pdf.CheckboxField name="p2.sig_spouse" className="w-3 h-3" /><span>Spouse</span></div>
               </div>
               {/* Sig line */}
-              <div className="border-b border-gray-800 w-full" style={{ height: 14 }} />
-              <span>Signature</span>
+              <Pdf.SignatureField name="p2.owner_signature" label="Signature" className="w-full h-[14px] border-b border-gray-800 border-b-[1px]" />
               {/* Print name + date on same line */}
               <div className="flex flex-row items-end gap-1 mt-1">
-                <div className="flex-1 border-b border-gray-800" />
+                <Pdf.TextField name="p2.owner_print_name" defaultValue={values['p2.owner_print_name']} onChange={set('p2.owner_print_name')} className="bg-transparent border-b border-gray-800 rounded-none h-5 px-0 text-[8.5px] flex-1" />
                 <span>/</span>
-                <div className="w-10 border-b border-gray-800" />
+                <Pdf.TextField name="p2.owner_sig_month" defaultValue={values['p2.owner_sig_month']} onChange={set('p2.owner_sig_month')} className="bg-transparent border-b border-gray-800 rounded-none h-5 px-0 text-[8.5px] w-10 text-center" />
                 <span>/</span>
-                <div className="w-10 border-b border-gray-800" />
+                <Pdf.TextField name="p2.owner_sig_day" defaultValue={values['p2.owner_sig_day']} onChange={set('p2.owner_sig_day')} className="bg-transparent border-b border-gray-800 rounded-none h-5 px-0 text-[8.5px] w-10 text-center" />
+                <span>/</span>
+                <Pdf.TextField name="p2.owner_sig_year" defaultValue={values['p2.owner_sig_year']} onChange={set('p2.owner_sig_year')} className="bg-transparent border-b border-gray-800 rounded-none h-5 px-0 text-[8.5px] w-10 text-center" />
               </div>
               <div className="flex flex-row text-[7.5px] text-gray-500">
                 <div className="flex-1">Print Legal Name</div>
@@ -571,7 +597,7 @@ export default function CHPContractPage2() {
               {/* Place of Execution */}
               <div className="flex flex-row items-end gap-1 mt-1">
                 <span className="shrink-0">Place of Execution:</span>
-                <div className="flex-1 border-b border-gray-800" />
+                <Pdf.TextField name="p2.owner_place_of_execution" defaultValue={values['p2.owner_place_of_execution']} onChange={set('p2.owner_place_of_execution')} className="bg-transparent border-b border-gray-800 rounded-none h-5 px-0 text-[8.5px] flex-1" />
               </div>
             </div>
 
@@ -581,14 +607,15 @@ export default function CHPContractPage2() {
                 <div className="flex items-center gap-1"><Pdf.CheckboxField name="p2.cosig_homeowner" className="w-3 h-3" /><span>Homeowner</span></div>
                 <div className="flex items-center gap-1"><Pdf.CheckboxField name="p2.cosig_spouse" className="w-3 h-3" /><span>Spouse</span></div>
               </div>
-              <div className="border-b border-gray-800 w-full" style={{ height: 14 }} />
-              <span>Co Applicant Signature</span>
+              <Pdf.SignatureField name="p2.cosig_signature" label="Co Applicant Signature" className="w-full h-[14px] border-b border-gray-800 border-b-[1px]" />
               <div className="flex flex-row items-end gap-1 mt-1">
-                <div className="flex-1 border-b border-gray-800" />
+                <Pdf.TextField name="p2.cosig_print_name" defaultValue={values['p2.cosig_print_name']} onChange={set('p2.cosig_print_name')} className="bg-transparent border-b border-gray-800 rounded-none h-5 px-0 text-[8.5px] flex-1" />
                 <span>/</span>
-                <div className="w-10 border-b border-gray-800" />
+                <Pdf.TextField name="p2.cosig_sig_month" defaultValue={values['p2.cosig_sig_month']} onChange={set('p2.cosig_sig_month')} className="bg-transparent border-b border-gray-800 rounded-none h-5 px-0 text-[8.5px] w-10 text-center" />
                 <span>/</span>
-                <div className="w-10 border-b border-gray-800" />
+                <Pdf.TextField name="p2.cosig_sig_day" defaultValue={values['p2.cosig_sig_day']} onChange={set('p2.cosig_sig_day')} className="bg-transparent border-b border-gray-800 rounded-none h-5 px-0 text-[8.5px] w-10 text-center" />
+                <span>/</span>
+                <Pdf.TextField name="p2.cosig_sig_year" defaultValue={values['p2.cosig_sig_year']} onChange={set('p2.cosig_sig_year')} className="bg-transparent border-b border-gray-800 rounded-none h-5 px-0 text-[8.5px] w-10 text-center" />
               </div>
               <div className="flex flex-row text-[7.5px] text-gray-500">
                 <div className="flex-1">Co Applicant Print Legal Name</div>
@@ -600,7 +627,7 @@ export default function CHPContractPage2() {
               </div>
               <div className="flex flex-row items-end gap-1 mt-1">
                 <span className="shrink-0">Place of Execution:</span>
-                <div className="flex-1 border-b border-gray-800" />
+                <Pdf.TextField name="p2.cosig_place_of_execution" defaultValue={values['p2.cosig_place_of_execution']} onChange={set('p2.cosig_place_of_execution')} className="bg-transparent border-b border-gray-800 rounded-none h-5 px-0 text-[8.5px] flex-1" />
               </div>
             </div>
 

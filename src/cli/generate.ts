@@ -1,4 +1,5 @@
 import { PDFDocument, PDFName, PDFString, StandardFonts } from 'pdf-lib';
+import { PdfDocumentDigitalSigner } from 'sign-pdf-lib/dist/src/signer/pdf-document-digital-signer.js';
 import type { ExtractedData } from '../index';
 
 export async function generatePdf(
@@ -22,7 +23,10 @@ export async function generatePdf(
 
       const yPt = pageHeightPt - field.yTopPt - field.heightPt;
 
-      if (field.type === 'checkbox') {
+      if (field.type === 'signature') {
+        // Signature fields are added in a post-processing pass via sign-pdf-lib
+        continue;
+      } else if (field.type === 'checkbox') {
         const cb = form.createCheckBox(field.name);
         cb.addToPage(page, {
           x: field.xPt,
@@ -93,5 +97,34 @@ export async function generatePdf(
     }
   }
 
-  return pdfDoc.save({ useObjectStreams: false });
+  let pdfBytes = await pdfDoc.save({ useObjectStreams: false });
+
+  // Add signature field placeholders via sign-pdf-lib (post-processing pass)
+  const signatureFields = pages.flatMap(p => p.fields.filter(f => f.type === 'signature'));
+  if (signatureFields.length > 0) {
+    let buf = Buffer.from(pdfBytes);
+    for (const field of signatureFields) {
+      if (field.xPt === undefined || field.yTopPt === undefined || field.widthPt === undefined || field.heightPt === undefined) continue;
+      const page = pdfPages[field.pageIndex];
+      if (!page) continue;
+      const { height: pageHeightPt } = page.getSize();
+      const bottom = pageHeightPt - field.yTopPt - field.heightPt;
+      const docSigner = await PdfDocumentDigitalSigner.fromPdfAsync(buf);
+      docSigner.addSignatureField({
+        name: field.name,
+        pageIndex: field.pageIndex,
+        rectangle: {
+          left: field.xPt,
+          bottom,
+          right: field.xPt + field.widthPt,
+          top: bottom + field.heightPt,
+        },
+        embedFont: false,
+      });
+      buf = await docSigner.saveAsync() as Buffer<ArrayBuffer>;
+    }
+    pdfBytes = new Uint8Array(buf);
+  }
+
+  return pdfBytes;
 }

@@ -1,6 +1,6 @@
 export type PageSize = 'letter' | 'a4'
 
-export type FieldType = 'text' | 'textarea' | 'date' | 'checkbox' | 'dropdown'
+export type FieldType = 'text' | 'textarea' | 'date' | 'checkbox' | 'dropdown' | 'signature'
 
 export interface ExtractedText {
   text: string

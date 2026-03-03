@@ -20,6 +20,7 @@ import { Script } from './components/Script';
 import { CheckboxField } from './components/CheckboxField';
 import { Footer } from './components/Footer';
 import { InputField } from './components/InputField';
+import { SignatureField } from './components/SignatureField';
 
 export const Pdf = {
   Document,
@@ -31,4 +32,5 @@ export const Pdf = {
   CheckboxField,
   Footer,
   InputField,
+  SignatureField,
 } as const;

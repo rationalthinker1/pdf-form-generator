@@ -35,9 +35,16 @@ import { Pdf } from '@pdf-form/core'
 export default function MyForm() {
   return (
     <Pdf.Document>
-      <Pdf.Page size="letter">
+      <Pdf.Page size="letter" footer={<Pdf.Footer><Pdf.Text>Page 1</Pdf.Text></Pdf.Footer>}>
         <Pdf.Text>FIRST NAME</Pdf.Text>
         <Pdf.TextField name="firstName" label="First Name" />
+        <Pdf.InputField name="lastName" label="Last Name" type="text" />
+        <Pdf.CheckboxField name="agree" defaultChecked={false} />
+        <Pdf.SignatureField name="sig" label="Customer Signature" />
+        <Pdf.Box borderWidth={1} className="p-4">
+          <Pdf.Text>Boxed content</Pdf.Text>
+        </Pdf.Box>
+        <Pdf.Script>{`this.getField("firstName").value = "auto";`}</Pdf.Script>
       </Pdf.Page>
     </Pdf.Document>
   )
@@ -98,10 +105,62 @@ export default function MyForm() {
 
 ## Namespace Export Convention
 
-Components use single-word names (`Document`, `Page`, `TextField`) exported under the `Pdf` namespace to avoid import collisions with other libraries (e.g. `react-pdf`).
+Components use single-word names exported under the `Pdf` namespace to avoid import collisions with other libraries (e.g. `react-pdf`).
 
 ```ts
-export const Pdf = { Document, Page, TextField, Text } as const
+export const Pdf = {
+  Document, Page, TextField, Text, Box,
+  Script, CheckboxField, Footer, InputField, SignatureField,
+} as const
+```
+
+### `InputField` — composite field (label + TextField)
+
+Renders a small uppercase label above a `Pdf.TextField`. Supports controlled and uncontrolled modes.
+
+```tsx
+<Pdf.InputField
+  name="city"
+  label="City"
+  type="text"
+  flex="1"            // Tailwind flex-1 (default)
+  width="44"          // Tailwind w-44 (overrides flex)
+  borderRight         // border-r border-gray-400 divider
+/>
+```
+
+Props: `name`, `label`, `type`, `defaultValue`, `value` (controlled), `onChange`, `flex`, `width`, `borderRight`, `labelClassName`, `labelStyle`, `textClassName`, `textStyle`.
+
+### `CheckboxField`
+
+Renders a 16×16 toggle with checkmark SVG. Stores state locally; `data-field-default-value` reflects current checked state.
+
+```tsx
+<Pdf.CheckboxField name="opt_in" defaultChecked={false} />
+```
+
+### `SignatureField`
+
+Renders a signature-line div with bottom border. Mapped as `type="signature"` in the field extraction — currently rendered as a text field placeholder in PDF output.
+
+```tsx
+<Pdf.SignatureField name="p0.sig" label="Customer Signature" />
+```
+
+### `Box`
+
+Renders a div with `data-pdf-box="true"` so the CLI can draw a visible border rectangle in the PDF via pdf-lib.
+
+```tsx
+<Pdf.Box borderWidth={1} className="p-4">…</Pdf.Box>
+```
+
+### `Script`
+
+Embeds Acrobat JavaScript that runs on PDF open (`OpenAction`). All `<Pdf.Script>` blocks across all pages are concatenated.
+
+```tsx
+<Pdf.Script>{`this.getField("total").value = "0.00";`}</Pdf.Script>
 ```
 
 ## Tech Stack
@@ -186,13 +245,14 @@ window.__extractFieldData()               // returns ExtractedData
 
 ## Field Types
 
-| Component | Status | pdf-lib API |
-|-----------|--------|-------------|
-| `TextField` | ✅ Done | `form.createTextField()` |
-| `TextArea` | pending | `form.createTextField()` + `enableMultiline()` |
-| `CheckboxField` | pending | `form.createCheckBox()` |
-| `DropdownField` | pending | `form.createDropdown()` |
-| `RadioGroup` | pending | `form.createRadioGroup()` |
+| Component | Status | pdf-lib API | Notes |
+|-----------|--------|-------------|-------|
+| `TextField` | ✅ Done | `form.createTextField()` | type `text` or `date` (AA keystroke/format scripts) |
+| `TextArea` | ✅ Done | `form.createTextField()` + `enableMultiline()` | type `textarea` |
+| `CheckboxField` | ✅ Done | `form.createCheckBox()` | component-only toggle; `defaultChecked` |
+| `SignatureField` | ✅ Component | text field placeholder | renders signature line; no distinct PDF sig widget yet |
+| `DropdownField` | pending | `form.createDropdown()` | |
+| `RadioGroup` | pending | `form.createRadioGroup()` | |
 
 ## Non-Negotiable Constraints
 
@@ -200,6 +260,28 @@ window.__extractFieldData()               // returns ExtractedData
 - Field names must be unique across the entire document
 - Locked layout: `<Page>` container has fixed pixel dimensions — never fluid
 - No screenshotting, no canvas rasterization, no html-to-image
+
+## Agent Skills
+
+Invoke these Claude Code skills by typing the slash command:
+
+| Skill | Command | When to use |
+|-------|---------|-------------|
+| Commit | `/commit` | After each TDD cycle — generates a Conventional Commits + Gitmoji message from `git diff` |
+| Simplify | `/simplify` | After a feature is working — reviews changed code for reuse, quality, and efficiency |
+
+These are the only skills relevant to this project. Do not use `claude-developer-platform` (this project does not use the Anthropic API).
+
+## Project Agents
+
+Specialised agents live in `.claude/agents/`. Invoke them by describing what you want and Claude will select the right one, or reference the agent by name.
+
+| Agent | File | When to use |
+|-------|------|-------------|
+| `new-field` | `.claude/agents/new-field.md` | Add a new AcroForm field type (`DropdownField`, `RadioGroup`, etc.) — runs full TDD cycle across all 5 touch points |
+| `test-runner` | `.claude/agents/test-runner.md` | Run `bun test` and get a concise failure report with source context instead of raw output |
+| `new-form` | `.claude/agents/new-form.md` | Scaffold a new form example under `src/examples/` with correct boilerplate, field naming, and layout helpers |
+| `pdf-review` | `.claude/agents/pdf-review.md` | Start dev preview + generate `output.pdf` for `chp-contract`, then compare and report issues/suggestions |
 
 ## Implementation Plan
 
