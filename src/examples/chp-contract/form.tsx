@@ -79,13 +79,29 @@ export default function CHPContractPage2() {
   const set = (field: keyof FormValues) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setValues(v => ({ ...v, [field]: e.target.value }))
 
+  const plans = [
+    { name: 'Premium Plan', description: 'Heating & Cooling', payment: '$29.98', hst: '$3.90', total: '$33.88', enabled: true },
+  ]
+
+  const company = {
+    name: 'Canada Home Protect',
+    companyAcronym: 'CHP',
+    phoneNumber: '1-833-347-0209',
+    email: 'admin@canadahomeprotect.com',
+    website: 'www.canadahomeprotect.ca',
+    address: '805-4789 Yonge Street, Toronto ON M2NOG3',
+    city: 'Toronto',
+    province: 'ON',
+    postalCode: 'M2NOG3',
+  }
+
   return (
     <Pdf.Document>
 
       {/* ── PAGE 0: IMPORTANT — LEGAL RIGHTS COVER PAGE ──────────────── */}
       <Pdf.Page size="letter" footer={
         <Pdf.Footer>
-          <span className="text-[9px] text-gray-500">Canada Home Protect</span>
+          <span className="text-[9px] text-gray-500">{company.name}</span>
           <span className="text-[9px] text-gray-500">1/5</span>
           <span className="text-[9px] text-gray-500">PG1/5</span>
         </Pdf.Footer>
@@ -252,7 +268,7 @@ export default function CHPContractPage2() {
       {/* ── PAGE 1: CONSUMER PROTECTION ACT ─────────────────────────── */}
       <Pdf.Page size="letter" footer={
         <Pdf.Footer>
-          <span className="text-[9px] text-gray-500">Canada Home Protect</span>
+          <span className="text-[9px] text-gray-500">{company.name}</span>
           <span className="text-[9px] text-gray-500">2/5</span>
           <span className="text-[9px] text-gray-500">PG2/5</span>
         </Pdf.Footer>
@@ -351,11 +367,10 @@ export default function CHPContractPage2() {
 
           {/* Contact block — near bottom of page */}
           <p className="mb-1 leading-normal">For more information contact:</p>
-          <p className="mb-0 leading-tight">Canada Home Protect</p>
-          <p className="mb-0 leading-tight">Toll Free: 1-833-347-0209</p>
-          <p className="mb-0 leading-tight">4789 Yonge Street, Suite 805</p>
-          <p className="mb-0 leading-tight">Toronto ON M2NOG3</p>
-          <p className="mb-0 leading-tight">Email: admin@canadahomeprotect.ca</p>
+          <p className="mb-0 leading-tight">{company.name}</p>
+          <p className="mb-0 leading-tight">Toll Free: {company.phoneNumber}</p>
+          <p className="mb-0 leading-tight">{company.address}</p>
+          <p className="mb-0 leading-tight">Email: {company.email}</p>
 
         </div>
       </Pdf.Page>
@@ -363,7 +378,7 @@ export default function CHPContractPage2() {
       {/* ── PAGE 2: SERVICE AGREEMENT FORM ───────────────────────────── */}
       <Pdf.Page size="letter" footer={
         <Pdf.Footer>
-          <span className="text-[8px] text-gray-500">Canada Home Protect</span>
+          <span className="text-[8px] text-gray-500">{company.name}</span>
           <span className="text-[8px] text-gray-500">3/5</span>
           <span className="text-[8px] text-gray-500">PG3/5</span>
         </Pdf.Footer>
@@ -403,18 +418,18 @@ export default function CHPContractPage2() {
             <div className="flex flex-row gap-8 mt-0.5">
               <div className="flex flex-col gap-0.5">
                 <div className="flex items-center gap-1.5 text-[10px] text-gray-700">
-                  <span>📞</span><span>1-833-347-0209</span>
+                  <span>📞</span><span>{company.phoneNumber}</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-[10px] text-gray-700">
-                  <span>🌐</span><span>www.canadahomeprotect.ca</span>
+                  <span>🌐</span><span>{company.website}</span>
                 </div>
               </div>
               <div className="flex flex-col gap-0.5">
                 <div className="flex items-center gap-1.5 text-[10px] text-gray-700">
-                  <span>✉</span><span>admin@canadahomeprotect.ca</span>
+                  <span>✉</span><span>{company.email}</span>
                 </div>
                 <div className="flex items-center gap-1.5 text-[10px] text-gray-700">
-                  <span>📍</span><span>805-4789 Yonge Street, Toronto ON M2NOG3</span>
+                  <span>📍</span><span>{company.address}</span>
                 </div>
               </div>
             </div>
@@ -483,26 +498,32 @@ export default function CHPContractPage2() {
             <div className="w-24 px-2 py-0.5 text-[10px] font-bold text-gray-800 text-center">Total</div>
           </div>
 
-          {/* Premium Plan row */}
-          <div className={tableRow}>
-            <div className="flex-3 border-r border-gray-400 px-2 py-0.5 flex items-center gap-2">
-              <div className="w-3.5 h-3.5 border border-gray-600 shrink-0" />
-              <span className="text-[10px] text-gray-800"><strong>Premium Plan</strong> (Heating &amp; Cooling)</span>
-            </div>
-            <div className="w-28 border-r border-gray-400 px-2 py-0.5 text-[10px] text-gray-800 text-center flex items-center justify-center">$29.98</div>
-            <div className="w-20 border-r border-gray-400 px-2 py-0.5 text-[10px] text-gray-800 text-center flex items-center justify-center">$3.90</div>
-            <div className="w-24 px-2 py-0.5 text-[10px] text-gray-800 text-center flex items-center justify-center">$33.88</div>
-          </div>
-
-          {/* Empty plan rows */}
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className={tableRow} style={{ height: 22 }}>
-              <div className="flex-3 border-r border-gray-400" />
-              <div className="w-28 border-r border-gray-400" />
-              <div className="w-20 border-r border-gray-400" />
-              <div className="w-24" />
-            </div>
-          ))}
+          {/* Plan rows */}
+          {[...Array(7)].map((_, i) => {
+            const plan = plans[i];
+            return (
+              <div key={i} className={tableRow} style={!plan ? { height: 22 } : undefined}>
+                {plan ? (
+                  <>
+                    <div className="flex-3 border-r border-gray-400 px-2 py-0.5 flex items-center gap-2">
+                      <Pdf.CheckboxField name={`plan_${i}_enabled`} defaultChecked={plan.enabled} className="w-3.5 h-3.5 shrink-0" />
+                      <span className="text-[10px] text-gray-800"><strong>{plan.name}</strong> ({plan.description})</span>
+                    </div>
+                    <div className="w-28 border-r border-gray-400 px-2 py-0.5 text-[10px] text-gray-800 text-center flex items-center justify-center">{plan.payment}</div>
+                    <div className="w-20 border-r border-gray-400 px-2 py-0.5 text-[10px] text-gray-800 text-center flex items-center justify-center">{plan.hst}</div>
+                    <div className="w-24 px-2 py-0.5 text-[10px] text-gray-800 text-center flex items-center justify-center">{plan.total}</div>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex-3 border-r border-gray-400" />
+                    <div className="w-28 border-r border-gray-400" />
+                    <div className="w-20 border-r border-gray-400" />
+                    <div className="w-24" />
+                  </>
+                )}
+              </div>
+            );
+          })}
 
           {/* Footer: note + Start Date */}
           <div className={`${tableRow} border-b-0`}>
@@ -551,14 +572,14 @@ export default function CHPContractPage2() {
           <p className="mb-0.5">By enrolling in a maintenance plan as described above, all repairs to your furnace and/or air conditioning unit or plumbing system will be completed at no additional cost for the term of the agreement*</p>
           <ul className="list-disc pl-4 mb-0.5 space-y-0">
             <li>All applicable parts &amp; labour repairs at no additional cost*</li>
-            <li>24/7 emergency service hotline 1-833-347-0209</li>
+            <li>24/7 emergency service hotline {company.phoneNumber}</li>
             <li>Experienced, licensed and bonded technicians handle repairs</li>
             <li>Priority service on all calls</li>
             <li>No upfront fees for new/high efficiency replacement equipment*</li>
           </ul>
           <p className="mb-0.5">*Refer to HMP Terms and Conditions (attached) for details</p>
-          <p className="mb-0.5">By selecting one of the following price maintenance programs from above, the customer, agrees to the Canada Home Protect™ Home Maintenance Plan (HMP) Terms and Conditions (attached).</p>
-          <p className="mb-0.5">This Agreement will take effect 30 days after the date hereof. This Agreement is with Canada Home Protect™ and not my local utility provider. Unless agreed to in writing by Canada Home Protect™, no amendments, whether written or verbal, to this Agreement Form or Terms and Conditions will be accepted. By signing this Agreement, you agree that you have read, understand and agree to the Terms and Conditions on the reverse side and acknowledge receipt of a copy of this Agreement.</p>
+          <p className="mb-0.5">By selecting one of the following price maintenance programs from above, the customer, agrees to the {company.name}™ Home Maintenance Plan (HMP) Terms and Conditions (attached).</p>
+          <p className="mb-0.5">This Agreement will take effect 30 days after the date hereof. This Agreement is with {company.name}™ and not my local utility provider. Unless agreed to in writing by {company.name}™, no amendments, whether written or verbal, to this Agreement Form or Terms and Conditions will be accepted. By signing this Agreement, you agree that you have read, understand and agree to the Terms and Conditions on the reverse side and acknowledge receipt of a copy of this Agreement.</p>
           <p className="mb-1">Your Rights under the Consumer Protection Act, 2002, are outlined in Section 23 of the HMP Terms and Conditions of this Agreement, (attached).</p>
           <p className="font-bold text-center text-[10px] mb-2">YOUR CANCELLATION RIGHTS ARE LOCATED ON PAGE 4 OF 5</p>
         </div>
@@ -664,7 +685,7 @@ if (prov) {
       {/* ── PAGE 3: HMP TERMS AND CONDITIONS ─────────────────────────── */}
       <Pdf.Page size="letter" footer={
         <Pdf.Footer>
-          <span className="text-[8px] text-gray-500">Canada Home Protect</span>
+          <span className="text-[8px] text-gray-500">{company.name}</span>
           <span className="text-[8px] text-gray-500">4/5</span>
           <span className="text-[8px] text-gray-500">PG4/5</span>
         </Pdf.Footer>
@@ -676,47 +697,47 @@ if (prov) {
             <div className="flex-1 flex flex-col gap-1.5">
 
               <p className="font-bold">HOME MAINTENANCE PLAN (HMP) TERMS AND CONDITIONS</p>
-              <p>The following Terms &amp; Conditions (which together with the Agreement Form to which they are appended are collectively referred to as this "Agreement") are the full and complete agreement with the Customer (the "Customer") being the name and signatory on the Home Maintenance Plan ("HMP") Agreement Form who is the person entering into this Agreement with Canada Home Protect ("CHP") along with Canada Home Protect and all of the Customer's utility bill, the Customer understands that each person shall be deemed the "Customer" and each person has the authority to enter into this Agreement. Each person shall be individually liable, and all of the Customers are collectively, jointly, and severally liable, for all obligations, liabilities and indebtedness imposed on Customer by this Agreement.</p>
+              <p>The following Terms &amp; Conditions (which together with the Agreement Form to which they are appended are collectively referred to as this "Agreement") are the full and complete agreement with the Customer (the "Customer") being the name and signatory on the Home Maintenance Plan ("HMP") Agreement Form who is the person entering into this Agreement with {company.name} ("{company.companyAcronym}") along with {company.name} and all of the Customer's utility bill, the Customer understands that each person shall be deemed the "Customer" and each person has the authority to enter into this Agreement. Each person shall be individually liable, and all of the Customers are collectively, jointly, and severally liable, for all obligations, liabilities and indebtedness imposed on Customer by this Agreement.</p>
 
-              <p>1. APPOINTMENT OF AGENT: The Customer hereby appoints Canada Home Protect to be their agent and HMP supplier for all purposes related to the arrangement of HMP billing to the Service Address on this Agreement ("Appointment of Agent"). The Customer's utility provider and all other related third parties are entitled to rely upon all actions taken, or documents signed, by Canada Home Protect in connection with or pursuant to this Appointment of Agent as though the Customer had taken such action or signed such document himself/herself including, without limitation, the negotiation, implementation, operation, performance, amendment and termination of any HMP arrangement. This Appointment of Agent shall be effective from the date the Customer signs the Agreement and shall continue until CHP or the customer ends this agreement.</p>
+              <p>1. APPOINTMENT OF AGENT: The Customer hereby appoints {company.name} to be their agent and HMP supplier for all purposes related to the arrangement of HMP billing to the Service Address on this Agreement ("Appointment of Agent"). The Customer's utility provider and all other related third parties are entitled to rely upon all actions taken, or documents signed, by {company.name} in connection with or pursuant to this Appointment of Agent as though the Customer had taken such action or signed such document himself/herself including, without limitation, the negotiation, implementation, operation, performance, amendment and termination of any HMP arrangement. This Appointment of Agent shall be effective from the date the Customer signs the Agreement and shall continue until {company.companyAcronym} or the customer ends this agreement.</p>
 
-              <p>2. OUR SERVICE COMMITMENT TO CUSTOMER: Canada Home Protect's commitment to the Customer is to offer maintenance services as outlined below in these Terms and Conditions. This Agreement shall take effect thirty (30) days after the date of this Agreement (the "Effective Date"). An emergency telephone number 1-833-347-0209 is available to the Customer 7 days a week, 24 hours a day to handle the dispatching of emergency service requirements.</p>
+              <p>2. OUR SERVICE COMMITMENT TO CUSTOMER: {company.name}'s commitment to the Customer is to offer maintenance services as outlined below in these Terms and Conditions. This Agreement shall take effect thirty (30) days after the date of this Agreement (the "Effective Date"). An emergency telephone number {company.phoneNumber} is available to the Customer 7 days a week, 24 hours a day to handle the dispatching of emergency service requirements.</p>
 
-              <p>3. CUSTOMER'S COMMITMENT: Canada Home Protect will honour our Service Commitment in accordance with these terms and conditions and, in turn, the Customer agrees that: They represent and warrant that they have the authority to enter into this Agreement either as the owner of the Premises, or because they have been authorized to enter into this Agreement as such owner's duly authorized agent.</p>
+              <p>3. CUSTOMER'S COMMITMENT: {company.name} will honour our Service Commitment in accordance with these terms and conditions and, in turn, the Customer agrees that: They represent and warrant that they have the authority to enter into this Agreement either as the owner of the Premises, or because they have been authorized to enter into this Agreement as such owner's duly authorized agent.</p>
 
-              <p>4. DIRECTION AND EXCHANGE OF PERSONAL INFORMATION: By signing this agreement, I hereby direct and authorize Canada Home Protect to enter into arrangements on my behalf with my utility provider with regard to billing arrangements in conjunction with the HMP. In addition, I authorize and direct my utility provider and any related third party to release to Canada Home Protect all information in such person's possession and control relating to me, including but not limited to any related credit and payment history.</p>
+              <p>4. DIRECTION AND EXCHANGE OF PERSONAL INFORMATION: By signing this agreement, I hereby direct and authorize {company.name} to enter into arrangements on my behalf with my utility provider with regard to billing arrangements in conjunction with the HMP. In addition, I authorize and direct my utility provider and any related third party to release to {company.name} all information in such person's possession and control relating to me, including but not limited to any related credit and payment history.</p>
 
-              <p>5. REPLACEMENT PROGRAM: CHP will provide the customer with a credit of $500 (or equivalent in rental furnace/AC deferred payments/finance/buyout) towards the purchase/rental of a new replacement unit from Canada Home Protect. The Customer's maintenance plan is transferable to the new unit(s).</p>
+              <p>5. REPLACEMENT PROGRAM: {company.companyAcronym} will provide the customer with a credit of $500 (or equivalent in rental furnace/AC deferred payments/finance/buyout) towards the purchase/rental of a new replacement unit from {company.name}. The Customer's maintenance plan is transferable to the new unit(s).</p>
 
               <p>6. GENERAL EXCLUSIONS: Repairs are not included as a part of any maintenance services provided hereunder. We are not responsible for any repairs resulting from any improperly installed units (installed by someone other than us). Any repairs or other service work required will only be performed with our express written consent. Any attempted repairs by us that do not resolve the issue will not result in any costs or liability being paid to customer. All plans described in these Terms and Conditions do not cover any costs, including diagnosis and service, repair, parts replacement or adjustment.</p>
 
-              <p>7. BUILDING ZONING CODE REQUIREMENTS OR VIOLATIONS: If current building or other code violations are discovered before or during the diagnosis or repair of equipment, CHP shall not be required to repair or service the equipment until the Customer completes the necessary corrective work at their own expense. If additional costs are incurred in order to comply with local, provincial or federal law, CHP shall not be responsible for that additional expense. CHP is not responsible for service or repair of equipment when permits cannot be obtained and will not pay any costs relating to permits.</p>
+              <p>7. BUILDING ZONING CODE REQUIREMENTS OR VIOLATIONS: If current building or other code violations are discovered before or during the diagnosis or repair of equipment, {company.companyAcronym} shall not be required to repair or service the equipment until the Customer completes the necessary corrective work at their own expense. If additional costs are incurred in order to comply with local, provincial or federal law, {company.companyAcronym} shall not be responsible for that additional expense. {company.companyAcronym} is not responsible for service or repair of equipment when permits cannot be obtained and will not pay any costs relating to permits.</p>
 
-              <p>8. HAZARDOUS MATERIALS: CHP shall not cover service involving hazardous or toxic materials, asbestos, lead or the disposal of refrigerants or contaminants.</p>
+              <p>8. HAZARDOUS MATERIALS: {company.companyAcronym} shall not cover service involving hazardous or toxic materials, asbestos, lead or the disposal of refrigerants or contaminants.</p>
 
-              <p>9. OTHER TERMS: Canada Home Protect will not reimburse the Customer for the costs of services, repairs or parts replacement performed by contractors that have not been authorized by Canada Home Protect in writing to perform such service. Canada Home Protect has the right to change, from time to time, any term of this Agreement, including any plan rates and charges by sending the Customer prior written notice of the change and such change will be effective 30 days after the date set out in that notice. If the Customer does not consent to a price change, the Agreement may be terminated without penalty. Scheduling maintenance bookings under the CHP</p>
+              <p>9. OTHER TERMS: {company.name} will not reimburse the Customer for the costs of services, repairs or parts replacement performed by contractors that have not been authorized by {company.name} in writing to perform such service. {company.name} has the right to change, from time to time, any term of this Agreement, including any plan rates and charges by sending the Customer prior written notice of the change and such change will be effective 30 days after the date set out in that notice. If the Customer does not consent to a price change, the Agreement may be terminated without penalty. Scheduling maintenance bookings under the {company.companyAcronym}</p>
 
             </div>
 
             {/* Right column */}
             <div className="flex-1 flex flex-col gap-1.5">
 
-              <p>Maintenance Plan must be scheduled fourteen (14) days from the date the maintenance request is received by CHP.</p>
+              <p>Maintenance Plan must be scheduled fourteen (14) days from the date the maintenance request is received by {company.companyAcronym}.</p>
 
-              <p>10. TERM AND CANCELLATION: The Customer's coverage under any plan shall be in effect for a fixed term of hundred and twenty (120) months commencing on the date of enrollment (the "Term"), unless otherwise terminated in accordance with this Agreement. Either Canada Home Protect ("CHP") or the Customer may terminate this Agreement upon written notice to the other party. Such termination shall take effect on the date the written notice is received unless otherwise stated in the notice. If the Customer cancels this Agreement prior to the completion of the 120-month Term without CHP's written consent and without providing valid cause and reason for cancellation, the Customer acknowledges and agrees that:</p>
+              <p>10. TERM AND CANCELLATION: The Customer's coverage under any plan shall be in effect for a fixed term of hundred and twenty (120) months commencing on the date of enrollment (the "Term"), unless otherwise terminated in accordance with this Agreement. Either {company.name} ("{company.companyAcronym}") or the Customer may terminate this Agreement upon written notice to the other party. Such termination shall take effect on the date the written notice is received unless otherwise stated in the notice. If the Customer cancels this Agreement prior to the completion of the 120-month Term without {company.companyAcronym}'s written consent and without providing valid cause and reason for cancellation, the Customer acknowledges and agrees that:</p>
               <p className="pl-3">1. <em>The entire remaining balance of payments due for the unexpired portion of the Term shall become immediately due and payable; and</em></p>
-              <p className="mb-1 pl-3">2. <em>CHP may, at its discretion, report the outstanding balance and account status to Canadian credit bureaus and pursue recovery through collection channels.</em></p>
-              <p>If CHP cancels this Agreement, its liability shall be limited to a refund, if any, of the unexpired portion of payments already made, and to the completion of any maintenance covered by the Customer's plan for which CHP has received notice prior to termination. If CHP is unable to enroll the Customer for billing purposes, CHP may cancel this Agreement and shall provide written notice of such cancellation to the Customer.</p>
+              <p className="mb-1 pl-3">2. <em>{company.companyAcronym} may, at its discretion, report the outstanding balance and account status to Canadian credit bureaus and pursue recovery through collection channels.</em></p>
+              <p>If {company.companyAcronym} cancels this Agreement, its liability shall be limited to a refund, if any, of the unexpired portion of payments already made, and to the completion of any maintenance covered by the Customer's plan for which {company.companyAcronym} has received notice prior to termination. If {company.companyAcronym} is unable to enroll the Customer for billing purposes, {company.companyAcronym} may cancel this Agreement and shall provide written notice of such cancellation to the Customer.</p>
 
-              <p>11. BILLING: Pre-authorized Debit ("PAD") Payments: You authorize CHP to debit regular monthly payments and additional sporadic PADs for other charges under the Agreement or as authorized by you for your personal use. You waive any written notice before the first PAD is processed or when any change in the PAD amount is made because of an adjustment in the payment amount or other charges. You will advise CHP of any changes in the account information or other change in the preauthorization payment at least 10 business days prior to the next payment date. You may cancel this preauthorization at any time by sending a notice to CHP at least 10 business days prior to the next payment date. The cancellation of preauthorization applies only to the method of payment and will not change or terminate your obligations on this Agreement. You may obtain a sample cancellation form or more information on your right to cancel a PAD agreement by consulting your financial institution or by visiting www.cdnpay.ca. CHP can cancel this preauthorization by sending a 30-day notice to you. It can also be cancelled without notice if the financial institution refuses the PAD for any reason or</p>
+              <p>11. BILLING: Pre-authorized Debit ("PAD") Payments: You authorize {company.companyAcronym} to debit regular monthly payments and additional sporadic PADs for other charges under the Agreement or as authorized by you for your personal use. You waive any written notice before the first PAD is processed or when any change in the PAD amount is made because of an adjustment in the payment amount or other charges. You will advise {company.companyAcronym} of any changes in the account information or other change in the preauthorization payment at least 10 business days prior to the next payment date. You may cancel this preauthorization at any time by sending a notice to {company.companyAcronym} at least 10 business days prior to the next payment date. The cancellation of preauthorization applies only to the method of payment and will not change or terminate your obligations on this Agreement. You may obtain a sample cancellation form or more information on your right to cancel a PAD agreement by consulting your financial institution or by visiting www.cdnpay.ca. {company.companyAcronym} can cancel this preauthorization by sending a 30-day notice to you. It can also be cancelled without notice if the financial institution refuses the PAD for any reason or</p>
 
-              <p>you default under the Agreement. CHP may transfer this authorization to the person to whom it transfers this Agreement or any entitlements under the Agreement. You have certain rights of recourse if a PAD does not comply with the terms of this PAD Agreement. For example you have the right to receive reimbursement for any PAD that is not compatible with the terms of the agreement. For more information on your rights of recourse, you may consult with your financial institution or visit www.cdnpay.ca. If I fail to pay on time, I shall pay 1% interest per month (12% per annum) on the unpaid amount, from the due date of payment until the payment is received. I shall be responsible for all costs related to recovery of amounts I fail to pay, including dishonored cheques, legal and collection costs. You understand that on each annual anniversary of your installation date, your monthly payment may increase up to 5.0% of the rental amount payable in the preceding year.</p>
+              <p>you default under the Agreement. {company.companyAcronym} may transfer this authorization to the person to whom it transfers this Agreement or any entitlements under the Agreement. You have certain rights of recourse if a PAD does not comply with the terms of this PAD Agreement. For example you have the right to receive reimbursement for any PAD that is not compatible with the terms of the agreement. For more information on your rights of recourse, you may consult with your financial institution or visit www.cdnpay.ca. If I fail to pay on time, I shall pay 1% interest per month (12% per annum) on the unpaid amount, from the due date of payment until the payment is received. I shall be responsible for all costs related to recovery of amounts I fail to pay, including dishonored cheques, legal and collection costs. You understand that on each annual anniversary of your installation date, your monthly payment may increase up to 5.0% of the rental amount payable in the preceding year.</p>
 
-              <p>12. PRICING AND TERM: Price: I agree that the Price of the HMP shall be selected on the Agreement Form. I agree to pay the Price and I also agree to pay any administration fees charged to Canada Home Protect by my utility provider. The Price does not include federal, provincial and municipal taxes, including the HST, payable in connection with the HMP to the Service Address. Term: Subject to the termination rights contained in this Agreement, the term of this Agreement is for an indefinite period. To cancel this agreement, you must give notice of cancellation to CHP, at the address set out in the agreement, by any means that allows you to prove the date on which you gave notice. CHP has 15 days from the time of receiving your letter to cancel your agreement and discontinue billing.</p>
+              <p>12. PRICING AND TERM: Price: I agree that the Price of the HMP shall be selected on the Agreement Form. I agree to pay the Price and I also agree to pay any administration fees charged to {company.name} by my utility provider. The Price does not include federal, provincial and municipal taxes, including the HST, payable in connection with the HMP to the Service Address. Term: Subject to the termination rights contained in this Agreement, the term of this Agreement is for an indefinite period. To cancel this agreement, you must give notice of cancellation to {company.companyAcronym}, at the address set out in the agreement, by any means that allows you to prove the date on which you gave notice. {company.companyAcronym} has 15 days from the time of receiving your letter to cancel your agreement and discontinue billing.</p>
 
               <p>13. ELIGIBILITY HMP: coverage applies only to single family residence, be it a house, townhouse, condominium, apartment unit or modular unit.</p>
 
-              <p>14. CHANGE OF INFORMATION OR SERVICE ADDRESS: If I plan to move to another location, I will notify Canada Home Protect in writing of my new Service Address at least 30 days in advance of the anticipated relocation date. Upon receipt of such notice, Canada Home Protect will advise me as to whether Canada Home Protect is prepared to continue HMP to my new Service Address, and if so, the terms of this Agreement shall apply to the new location. My utility provider may provide to Canada Home Protect a notification of a change of address within my utility provider's franchise area and when Canada Home Protect receives such notice it will use its best efforts to continue the program contemplated by this Agreement for the remaining term of this Agreement at the new Service Address. If Canada Home Protect is unable to transfer the Agreement to my New Address, this Agreement shall</p>
+              <p>14. CHANGE OF INFORMATION OR SERVICE ADDRESS: If I plan to move to another location, I will notify {company.name} in writing of my new Service Address at least 30 days in advance of the anticipated relocation date. Upon receipt of such notice, {company.name} will advise me as to whether {company.name} is prepared to continue HMP to my new Service Address, and if so, the terms of this Agreement shall apply to the new location. My utility provider may provide to {company.name} a notification of a change of address within my utility provider's franchise area and when {company.name} receives such notice it will use its best efforts to continue the program contemplated by this Agreement for the remaining term of this Agreement at the new Service Address. If {company.name} is unable to transfer the Agreement to my New Address, this Agreement shall</p>
 
             </div>
           </div>
@@ -727,7 +748,7 @@ if (prov) {
       {/* ── PAGE 4: HMP TERMS AND CONDITIONS (continued) ─────────────── */}
       <Pdf.Page size="letter" footer={
         <Pdf.Footer>
-          <span className="text-[8px] text-gray-500">Canada Home Protect</span>
+          <span className="text-[8px] text-gray-500">{company.name}</span>
           <span className="text-[8px] text-gray-500">5/5</span>
           <span className="text-[8px] text-gray-500">PG5/5</span>
         </Pdf.Footer>
@@ -738,32 +759,32 @@ if (prov) {
             {/* Left column */}
             <div className="flex-1 flex flex-col gap-1.5">
 
-              <p>automatically cancelled without penalty. I also agree to notify Canada Home Protect in writing of any other change of information (including a change of account number, contract information or Mailing Address) at least 60 days prior to such change taking effect or immediately if the change is to take effect in less than 60 days.</p>
+              <p>automatically cancelled without penalty. I also agree to notify {company.name} in writing of any other change of information (including a change of account number, contract information or Mailing Address) at least 60 days prior to such change taking effect or immediately if the change is to take effect in less than 60 days.</p>
 
-              <p><strong>15. LIQUIDATED DAMAGES</strong> If Canada Home Protect terminates this Agreement because I am in default, I agree to pay Canada Home Protect, in addition to all other amounts owing by me hereunder at the date of such termination, damages equal to the amount of $100 per HMP (heating, cooling or plumbing) or $200 for a Combo Maintenance Plan. The Damages are hereby conclusively deemed to be liquidated damages and shall not, under any circumstances, be construed as a penalty. I authorize my utility provider to include the Damages in my utility provider's bill as an amount payable to Canada Home Protect.</p>
+              <p><strong>15. LIQUIDATED DAMAGES</strong> If {company.name} terminates this Agreement because I am in default, I agree to pay {company.name}, in addition to all other amounts owing by me hereunder at the date of such termination, damages equal to the amount of $100 per HMP (heating, cooling or plumbing) or $200 for a Combo Maintenance Plan. The Damages are hereby conclusively deemed to be liquidated damages and shall not, under any circumstances, be construed as a penalty. I authorize my utility provider to include the Damages in my utility provider's bill as an amount payable to {company.name}.</p>
 
-              <p><strong>16. ASSIGNMENT</strong> Canada Home Protect may, in its sole discretion, pledge, assign or otherwise transfer all or any of its rights or obligations under this Agreement or any proceeds arising pursuant to this Agreement without my consent. I shall not pledge, assign or otherwise transfer all or any of my rights or obligations under this Agreement. This Agreement shall be binding upon and shall ensure to the benefit of the successors and assigns of Canada Home Protect and myself.</p>
+              <p><strong>16. ASSIGNMENT</strong> {company.name} may, in its sole discretion, pledge, assign or otherwise transfer all or any of its rights or obligations under this Agreement or any proceeds arising pursuant to this Agreement without my consent. I shall not pledge, assign or otherwise transfer all or any of my rights or obligations under this Agreement. This Agreement shall be binding upon and shall ensure to the benefit of the successors and assigns of {company.name} and myself.</p>
 
-              <p><strong>17. UNAVAILABLE PARTS and PART REPLACEMENT</strong> If a part is unavailable, Canada Home Protect will attempt to obtain a replacement part or an equivalent substitute as quickly as possible, but limited availability of certain parts may result in delays from time to time. In the unusual event that Canada Home Protect cannot provide a part replacement or an equivalent substitute, Canada Home Protect will not be liable for such part replacement, equivalent substitute or for any resulting damages. Parts replacement or equivalent substitutes are solely at Canada Home Protect's discretion. Any part that is found to be defective and is replaced under your plan coverage becomes Canada Home Protect's sole property and may be disposed of at Canada Home Protect's discretion.</p>
+              <p><strong>17. UNAVAILABLE PARTS and PART REPLACEMENT</strong> If a part is unavailable, {company.name} will attempt to obtain a replacement part or an equivalent substitute as quickly as possible, but limited availability of certain parts may result in delays from time to time. In the unusual event that {company.name} cannot provide a part replacement or an equivalent substitute, {company.name} will not be liable for such part replacement, equivalent substitute or for any resulting damages. Parts replacement or equivalent substitutes are solely at {company.name}'s discretion. Any part that is found to be defective and is replaced under your plan coverage becomes {company.name}'s sole property and may be disposed of at {company.name}'s discretion.</p>
 
-              <p><strong>18. LIMIT ON LIABILITY</strong> Canada Home Protect is not the manufacturer or supplier of the Heating Unit or the Cooling Unit or plumbing system and Canada Home Protect makes no representations, warranties or conditions as to the performance of any unit(s). Canada Home Protect will not be liable for any loss, damage or injury of any type arising out of or related to this Agreement or caused or contributed in any way by the use and operation of the Heating Unit and/or the Cooling Unit and/or plumbing system or any indirect incidental, special or consequential damages even if reasonably foreseeable. If Canada Home Protect is not able to perform any of its obligations under this Agreement because of circumstances or events beyond its control, Canada Home Protect shall be excused from the performance of such obligations for the duration of such circumstances or events and Canada Home Protect shall not be liable to the Customer for such failure to perform. In addition to the General Exclusions in s.7 of this Agreement, the plans do not cover any losses, repairs or replacements arising from abuse, accidental or deliberate damage, theft, vandalism, fire, flood, earthquake, other natural disasters, acts of war, acts of God, unauthorized repair, if the equipment has been turned off, improper thermostat setting, or household electrical problems. The Customer agrees to indemnify Canada Home Protect from all claims, losses and costs that Canada Home Protect may suffer or pay, or may be required to pay, including legal expenses, in connection with the Heating Unit, the Cooling Unit, the plumbing system, this Agreement or the use and operation of either unit or system, including any claims against Canada Home Protect for any injury or death to individuals or damage to property. The Customer will pay, when due, all taxes and other charges imposed by any governmental or regulatory authority or in connection with this Agreement or your payments made under it.</p>
+              <p><strong>18. LIMIT ON LIABILITY</strong> {company.name} is not the manufacturer or supplier of the Heating Unit or the Cooling Unit or plumbing system and {company.name} makes no representations, warranties or conditions as to the performance of any unit(s). {company.name} will not be liable for any loss, damage or injury of any type arising out of or related to this Agreement or caused or contributed in any way by the use and operation of the Heating Unit and/or the Cooling Unit and/or plumbing system or any indirect incidental, special or consequential damages even if reasonably foreseeable. If {company.name} is not able to perform any of its obligations under this Agreement because of circumstances or events beyond its control, {company.name} shall be excused from the performance of such obligations for the duration of such circumstances or events and {company.name} shall not be liable to the Customer for such failure to perform. In addition to the General Exclusions in s.7 of this Agreement, the plans do not cover any losses, repairs or replacements arising from abuse, accidental or deliberate damage, theft, vandalism, fire, flood, earthquake, other natural disasters, acts of war, acts of God, unauthorized repair, if the equipment has been turned off, improper thermostat setting, or household electrical problems. The Customer agrees to indemnify {company.name} from all claims, losses and costs that {company.name} may suffer or pay, or may be required to pay, including legal expenses, in connection with the Heating Unit, the Cooling Unit, the plumbing system, this Agreement or the use and operation of either unit or system, including any claims against {company.name} for any injury or death to individuals or damage to property. The Customer will pay, when due, all taxes and other charges imposed by any governmental or regulatory authority or in connection with this Agreement or your payments made under it.</p>
 
-              <p><strong>19. AMENDMENTS</strong> Canada Home Protect may amend this Agreement at any time by providing the Customer with written notice of the necessary changes or amendments and this Agreement shall be amended 30 days after the date of such notice.</p>
+              <p><strong>19. AMENDMENTS</strong> {company.name} may amend this Agreement at any time by providing the Customer with written notice of the necessary changes or amendments and this Agreement shall be amended 30 days after the date of such notice.</p>
 
             </div>
 
             {/* Right column */}
             <div className="flex-1 flex flex-col gap-1.5">
 
-              <p>a waiver of its rights under any other provision of this Agreement, regardless of whether such provision is of the same or a similar nature. These offers and claims are made by Canada Home Protect alone. All other territories will be billed through Pre-authorized Debit payments.</p>
+              <p>a waiver of its rights under any other provision of this Agreement, regardless of whether such provision is of the same or a similar nature. These offers and claims are made by {company.name} alone. All other territories will be billed through Pre-authorized Debit payments.</p>
 
-              <p><strong>21. PRIVACY/RELEASE OF INFORMATION</strong> The Customer acknowledges that Canada Home Protect may collect, record, use and disclose the Customer's credit, financial and related personal information for purposes related to our business and the Customer consents to our disclosure or exchange information with credit bureaus, financial institutions, service providers, agents, affiliates and other third parties in connection with this Agreement. The Customer also consents to our use of this information for the purposes of evaluating the Customer's creditworthiness, providing the Customer with products and services under this Agreement, verifying information the Customer provides to Canada Home Protect, establishing, servicing and collecting on the Customer's account, offering the Customer other products and services, and meeting legal, regulatory, audit, processing and security requirements. The Customer understands that they can provide Canada Home Protect with notice at any time to stop using their personal information except as required by law or regulation, or as needed for the administration of the Customer's HMP. For more information about our privacy policy, please see www.canadahomeprotect.ca.</p>
+              <p><strong>21. PRIVACY/RELEASE OF INFORMATION</strong> The Customer acknowledges that {company.name} may collect, record, use and disclose the Customer's credit, financial and related personal information for purposes related to our business and the Customer consents to our disclosure or exchange information with credit bureaus, financial institutions, service providers, agents, affiliates and other third parties in connection with this Agreement. The Customer also consents to our use of this information for the purposes of evaluating the Customer's creditworthiness, providing the Customer with products and services under this Agreement, verifying information the Customer provides to {company.name}, establishing, servicing and collecting on the Customer's account, offering the Customer other products and services, and meeting legal, regulatory, audit, processing and security requirements. The Customer understands that they can provide {company.name} with notice at any time to stop using their personal information except as required by law or regulation, or as needed for the administration of the Customer's HMP. For more information about our privacy policy, please see {company.website}.</p>
 
-              <p><strong>22. CANADA HOME PROTECT CONTACT INFORMATION</strong> If I have any questions or concerns, I can contact Canada Home Protect by telephone at 1-833-347-0209 or e-mail at admin@canadahomeprotect.ca or by facsimile, mail, or by personal delivery. Please address all written correspondence to Manager, Customer Service – Home Maintenance Plans.</p>
+              <p><strong>22. {company.name} CONTACT INFORMATION</strong> If I have any questions or concerns, I can contact {company.name} by telephone at {company.phoneNumber} or e-mail at {company.email} or by facsimile, mail, or by personal delivery. Please address all written correspondence to Manager, Customer Service – Home Maintenance Plans.</p>
 
-              <p><strong>23. YOUR RIGHTS UNDER THE CONSUMER PROTECTION ACT, 2002</strong> You may cancel this agreement at any time during the period that ends ten (10) days after the day you receive a written copy of the agreement. You do not need to give CHP a reason for canceling during this 10-day period. If CHP does not make delivery within 30 days after the delivery date specified in this agreement or if CHP does not begin performance of its obligations within 30 days after the commencement date specified in this agreement, you may cancel this agreement at any time before delivery or commencement of performance. You lose the right to cancel if, after the 30-day period has expired, you agree to accept delivery or authorize commencement of performance. If the delivery date or commencement date is not specified in this agreement and CHP does not deliver or commence performance within 30 days after the date this agreement is entered into, you may cancel this agreement at any time before delivery of commencement of performance. You lose the right to cancel if, after the 30-day period has expired, you agree to accept delivery or authorize commencement of performance. In addition, there are other grounds that allow you to cancel this agreement. You may also have other rights, duties and remedies at law. For more information, you may contact the Ministry of Consumer and Business Services. To cancel this agreement, you must give notice of cancellation to CHP, at the address set out in the agreement, by any means that allows you to prove the date on which you gave notice. If no address is set out in the agreement, use any address of the supplier that is on record with the Government of Ontario or the Government of Canada or is known by you. If you cancel this agreement, CHP has fifteen (15) days to refund any payment you have made and return to you all goods delivered under a trade-in arrangement (or refund an amount equal to the trade-in allowance). However, if you cancel this agreement after having solicited the goods or services from CHP and having requested that delivery be made or performance be commenced within ten (10) days after the date this agreement is entered into, CHP is entitled to reasonable compensation for the goods and services that you received before the earlier of the 11th day after the date this agreement was entered into and the date on which you gave notice of cancellation to CHP, except goods that can be repossessed by or returned to CHP.</p>
+              <p><strong>23. YOUR RIGHTS UNDER THE CONSUMER PROTECTION ACT, 2002</strong> You may cancel this agreement at any time during the period that ends ten (10) days after the day you receive a written copy of the agreement. You do not need to give {company.companyAcronym} a reason for canceling during this 10-day period. If {company.companyAcronym} does not make delivery within 30 days after the delivery date specified in this agreement or if {company.companyAcronym} does not begin performance of its obligations within 30 days after the commencement date specified in this agreement, you may cancel this agreement at any time before delivery or commencement of performance. You lose the right to cancel if, after the 30-day period has expired, you agree to accept delivery or authorize commencement of performance. If the delivery date or commencement date is not specified in this agreement and {company.companyAcronym} does not deliver or commence performance within 30 days after the date this agreement is entered into, you may cancel this agreement at any time before delivery of commencement of performance. You lose the right to cancel if, after the 30-day period has expired, you agree to accept delivery or authorize commencement of performance. In addition, there are other grounds that allow you to cancel this agreement. You may also have other rights, duties and remedies at law. For more information, you may contact the Ministry of Consumer and Business Services. To cancel this agreement, you must give notice of cancellation to {company.companyAcronym}, at the address set out in the agreement, by any means that allows you to prove the date on which you gave notice. If no address is set out in the agreement, use any address of the supplier that is on record with the Government of Ontario or the Government of Canada or is known by you. If you cancel this agreement, {company.companyAcronym} has fifteen (15) days to refund any payment you have made and return to you all goods delivered under a trade-in arrangement (or refund an amount equal to the trade-in allowance). However, if you cancel this agreement after having solicited the goods or services from {company.companyAcronym} and having requested that delivery be made or performance be commenced within ten (10) days after the date this agreement is entered into, {company.companyAcronym} is entitled to reasonable compensation for the goods and services that you received before the earlier of the 11th day after the date this agreement was entered into and the date on which you gave notice of cancellation to {company.companyAcronym}, except goods that can be repossessed by or returned to {company.companyAcronym}.</p>
 
-              <p>MISCELLANEOUS This Agreement is binding upon and will ensure to the Customer's respective heirs, personal representatives, successors and permitted assigns. Except as specifically provided for herein, the Customer may not assign this Agreement to anyone without Canadian Home Maintenance's prior written consent. This Agreement is the entire agreement between Canada Home Protect and the Customer. It is governed by the laws of the Province of Ontario. Should any of the terms and conditions in this Agreement be held invalid for any reason by a Court or regulatory/government body of competent jurisdiction, then such terms or conditions shall be deemed severed from this Agreement and the remaining terms and conditions shall continue in full force and effect. Failure of either party at any time to require performance by the other party of any provision in this Agreement shall not be deemed to be a continuing waiver of that provision, or a waiver of its rights under any other provision of this Agreement, regardless of whether such provision is of the same or a similar nature. These offers and claims are made by Canada Home Protect alone. All other territories will be billed through Pre-authorized Debit payments.</p>
+              <p>MISCELLANEOUS This Agreement is binding upon and will ensure to the Customer's respective heirs, personal representatives, successors and permitted assigns. Except as specifically provided for herein, the Customer may not assign this Agreement to anyone without Canadian Home Maintenance's prior written consent. This Agreement is the entire agreement between {company.name} and the Customer. It is governed by the laws of the Province of Ontario. Should any of the terms and conditions in this Agreement be held invalid for any reason by a Court or regulatory/government body of competent jurisdiction, then such terms or conditions shall be deemed severed from this Agreement and the remaining terms and conditions shall continue in full force and effect. Failure of either party at any time to require performance by the other party of any provision in this Agreement shall not be deemed to be a continuing waiver of that provision, or a waiver of its rights under any other provision of this Agreement, regardless of whether such provision is of the same or a similar nature. These offers and claims are made by {company.name} alone. All other territories will be billed through Pre-authorized Debit payments.</p>
 
             </div>
           </div>

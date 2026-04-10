@@ -34,3 +34,5 @@ export const Pdf = {
   InputField,
   SignatureField,
 } as const;
+
+export { InputField } from './components/InputField';

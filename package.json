@@ -9,7 +9,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "bun test"
+    "test": "bun test",
+    "dbg": "node src/devtools/ws-server.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.2.1",
@@ -35,7 +36,8 @@
     "prettier": "^3.8.1",
     "prettier-plugin-tailwindcss": "^0.7.2",
     "typescript-eslint": "^8.56.1",
-    "vite": "^8.0.0-beta.13"
+    "vite": "^8.0.0-beta.13",
+    "ws": "^8.20.0"
   },
   "overrides": {
     "vite": "^8.0.0-beta.13"
